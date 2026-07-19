@@ -1,0 +1,23 @@
+# Render Blueprint — deploy the Knowledge Assistant from the repo.
+# In Render: New + → Blueprint → connect this repo. Render reads this file,
+# creates the service, and redeploys on every git push. Fill secrets in the dashboard.
+services:
+  - type: web
+    name: knowledge-assistant
+    runtime: python
+    plan: free
+    rootDir: src
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app/solution/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false          # set in the Render dashboard (never commit secrets)
+      - key: SELTZ_API_KEY
+        sync: false
+      # --- optional: LangSmith tracing/monitoring ---
+      - key: LANGSMITH_TRACING
+        value: "true"
+      - key: LANGSMITH_PROJECT
+        value: knowledge-assistant
+      - key: LANGSMITH_API_KEY
+        sync: false

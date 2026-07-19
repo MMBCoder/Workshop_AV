@@ -1,0 +1,34 @@
+[project]
+name = "agentic-ai-workshop"
+version = "0.1.0"
+description = "From 0 to Agentic AI — DataHack Summit 2026 workshop: notebooks + the Knowledge Assistant build."
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    # --- LLM + orchestration (mirrors the reference course stack) ---
+    "langchain>=1.2,<2",
+    "langchain-openai>=1.1,<2",
+    "langgraph>=1.0,<2",
+    "langchain-community>=0.4,<1",
+    # --- tools ---
+    "langchain-tavily>=0.2",     # web search tool — used in Module 2
+    "tavily-python>=0.5",        # underlying Tavily client
+    "seltz>=1.5.0",              # web search client — used in later modules
+    # --- knowledge & context (module 6) ---
+    "langchain-text-splitters>=0.3",   # chunking
+    "langchain-chroma>=0.2",           # vector store
+    "chromadb>=0.5",                   # embeddings DB backend
+    "langchain-mcp-adapters>=0.1",     # connect MCP servers as tools
+    # --- structured outputs / schemas ---
+    "pydantic>=2.7",
+    # --- app UI (module 8) ---
+    "streamlit>=1.38",
+    # --- config ---
+    "python-dotenv>=1.0",
+    # --- running notebooks locally (Colab already provides these) ---
+    "ipykernel>=6.29",
+    "jupyterlab>=4.2",
+]
+
+[tool.uv]
+package = false

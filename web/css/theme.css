@@ -1,0 +1,518 @@
+/* ============================================================
+   DataHack Summit 2026 — deck design system
+   Ported 1:1 from HackSession_Summit_2026_Content.pptx
+   Slide canvas: 13.333in x 7.5in  ->  1280 x 720 px @ 96dpi
+   ============================================================ */
+
+:root {
+  /* --- brand palette (extracted from pptx) --- */
+  --navy-900:  #0C1830;   /* deepest panel */
+  --navy-800:  #0F2247;   /* headings on light */
+  --navy-700:  #16264A;
+  --navy-600:  #1A1330;   /* chip fill */
+  --ink-600:   #3A4866;   /* body on light */
+  --slate-500: #7E8AA3;
+  --slate-400: #8A93A8;
+  --slate-300: #9AA4C0;
+  --slate-200: #AEB6CF;
+
+  --panel-tint: #F3F6FC;  /* light card fill */
+  --panel-line: #B9C7DF;  /* light card border */
+  --line-soft:  #D6E1F5;
+
+  --orange:  #FE7202;     /* primary accent */
+  --orange-2:#E8632A;     /* title-chip border */
+  --blue:    #2D7FF9;     /* section number */
+  --blue-2:  #3886F0;
+  --teal:    #1FB6A6;     /* speaker / AI accent */
+  --pink:    #FF7EB6;
+  --cyan:    #5CD0FF;
+  --green:   #9DECA0;
+
+  /* --- type --- */
+  --font-head: "Arial", "Helvetica Neue", Helvetica, sans-serif;
+  --font-body: "Calibri", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Consolas", "SF Mono", "Menlo", monospace;
+}
+
+/* ---------- reveal frame ---------- */
+.reveal { font-family: var(--font-body); }
+.reveal .slides { text-align: left; }
+.reveal .slides section {
+  padding: 0;
+  height: 720px;
+  width: 1280px;
+  overflow: hidden;
+}
+
+/* The stage is the 1280x720 canvas. Everything positions absolutely
+   inside it, exactly like shapes on a PowerPoint slide. */
+.stage {
+  position: absolute;
+  inset: 0;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+}
+
+/* absolute element helper: use inline style for left/top/width/height in px */
+.abs { position: absolute; }
+
+/* ============================================================
+   BACKGROUNDS
+   ============================================================ */
+.bg-dark  { background: #0a1430 url("../assets/bg-dark.jpg")  center/cover no-repeat; }
+.bg-dark2 { background: #0a1430 url("../assets/bg-dark-alt.jpg") center/cover no-repeat; }
+.bg-light { background: #ffffff; }
+
+/* ============================================================
+   SHARED PARTIALS
+   ============================================================ */
+
+/* top-left logo (title slide) */
+.logo-tl { left: 53px; top: 28px; width: 336px; }
+.logo-tl img { width: 100%; display: block; }
+
+/* glowing orb graphic */
+.orb img { width: 100%; display: block; }
+
+/* bottom-left date line */
+.footer-date {
+  left: 53px; top: 672px; width: 780px;
+  font-family: var(--font-body);
+  font-size: 14.7px; color: var(--slate-300);
+}
+
+/* bottom-right Human × AI lockup */
+.footer-hxai {
+  top: 672px; width: 362px; right: 42px; left: auto;
+  text-align: right;
+  font-family: var(--font-head);
+  font-size: 17.3px; font-weight: 700;
+}
+.footer-hxai .human { color: var(--blue); }
+.footer-hxai .x     { color: var(--slate-300); font-weight: 400; }
+.footer-hxai .ai    { color: var(--teal); }
+
+/* centered brand footer (content slides) */
+.footer-brand {
+  left: 0; top: 694px; width: 1280px;
+  text-align: center;
+  font-family: var(--font-head);
+  font-size: 10.7px; color: var(--slate-400);
+  letter-spacing: 2.3px;
+}
+
+/* ============================================================
+   TEMPLATE 1 — TITLE  (slide 1)
+   ============================================================ */
+.t-chip {
+  left: 53px; top: 197px; width: 206px; height: 44px;
+  background: var(--navy-600);
+  border: 1.6px solid var(--orange-2);
+  border-radius: 22px;          /* pptx roundRect adj=50000 → 50% of height */
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head);
+  font-size: 15.3px; font-weight: 700; color: var(--orange-2);
+  letter-spacing: 2.7px;
+}
+.t-title {
+  left: 53px; top: 274px; width: 823px;
+  font-family: var(--font-head);
+  font-size: 42.7px; font-weight: 700; color: #fff;
+  letter-spacing: 1.3px; line-height: 1.28;
+}
+.t-subtitle {
+  left: 54px; top: 437px; width: 700px;
+  font-family: var(--font-body);
+  font-size: 21.3px; color: var(--teal);
+}
+.t-speaker-label {
+  left: 54px; top: 499px; width: 400px;
+  font-family: var(--font-head);
+  font-size: 16px; font-weight: 700; color: var(--teal);
+  letter-spacing: 4px;
+}
+.t-rule {
+  left: 54px; top: 530px; width: 134px; height: 4px;
+  background: var(--teal);
+}
+.t-speaker-name {
+  left: 53px; top: 543px; width: 720px;
+  font-family: var(--font-head);
+  font-size: 30.7px; font-weight: 700; color: #fff;
+}
+.t-orb { left: 716px; top: 85px; width: 537px; }
+
+/* ============================================================
+   TEMPLATE 2 — SECTION DIVIDER  (slide 3)
+   ============================================================ */
+.s-number {
+  left: 53px; top: 149px; width: 400px;
+  font-family: var(--font-head);
+  font-size: 138.7px; font-weight: 700; color: var(--blue);
+  line-height: 1;
+}
+.s-label {
+  left: 56px; top: 322px; width: 500px;
+  font-family: var(--font-head);
+  font-size: 17.3px; font-weight: 700; color: var(--teal);
+  letter-spacing: 5.3px;
+}
+.s-title {
+  left: 53px; top: 360px; width: 820px;
+  font-family: var(--font-head);
+  font-size: 56px; font-weight: 700; color: #fff;
+  line-height: 1.1;
+}
+.s-desc {
+  left: 54px; top: 480px; width: 720px;
+  font-family: var(--font-body);
+  font-size: 21.3px; color: var(--slate-200);
+}
+.s-orb { left: 704px; top: 50px; width: 576px; }
+
+/* ============================================================
+   TEMPLATE 3 — CONTENT PAGE  (slide 2 style, the "normal page")
+   ============================================================ */
+.c-accent {                    /* orange vertical tab beside title */
+  left: 53px; top: 58px; width: 9px; height: 63px;
+  background: var(--orange);
+}
+.c-title {                     /* vertically centered on the accent bar */
+  left: 77px; top: 58px; width: 900px; height: 63px;
+  display: flex; align-items: center;
+  font-family: var(--font-head);
+  font-size: 38.7px; font-weight: 700; color: var(--navy-800);
+}
+
+/* small AV × DataHack logo, top-right corner of content pages */
+.c-logo {
+  right: 53px; top: 66px; left: auto; width: 160px;
+}
+.c-logo img { width: 100%; display: block; }
+.c-rule {                      /* orange horizontal divider */
+  left: 53px; top: 139px; width: 1174px; height: 3px;
+  background: var(--orange);
+}
+/* content body region: a free canvas between the title-rule and the footer.
+   Flex column by default so content fills the full height instead of piling
+   up at the top. Pick a distribution modifier per slide. */
+.c-body {
+  left: 53px; top: 164px; width: 1174px; height: 494px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.c-body.spread  { justify-content: space-between; }   /* push blocks to fill top→bottom */
+.c-body.around  { justify-content: space-around; }
+.c-body.top     { justify-content: flex-start; }
+.c-body.end     { justify-content: flex-end; }
+/* a horizontal split that fills the whole height */
+.c-body.split { flex-direction: row; align-items: stretch; gap: 40px; }
+.c-body.split > * { display: flex; flex-direction: column; justify-content: center; }
+/* make direct children that should grow actually grow */
+.c-body .grow { flex: 1; }
+
+/* small orb, top-right of content pages (same asset as slide 1) */
+.c-orb { left: 1133px; top: 39px; width: 90px; }
+
+/* ---- handy content building blocks (light theme) ---- */
+.card {
+  background: var(--panel-tint);
+  border: 1px solid var(--panel-line);
+  border-radius: 12px;
+}
+.eyebrow {
+  font-family: var(--font-head);
+  font-size: 13px; font-weight: 700; letter-spacing: 3px;
+  color: var(--teal); text-transform: uppercase;
+}
+.lead   { color: var(--navy-800); font-size: 20px; font-weight: 700; }
+.body   { color: var(--ink-600);  font-size: 16px; line-height: 1.5; }
+.muted  { color: var(--slate-500); font-size: 13.5px; }
+
+/* code block on light pages */
+.code {
+  font-family: var(--font-mono);
+  font-size: 14px; line-height: 1.5;
+  background: var(--navy-900); color: #d6e1f5;
+  border-radius: 10px; padding: 18px 20px;
+  white-space: pre; overflow: hidden;
+}
+.code .kw  { color: var(--pink); }
+.code .fn  { color: var(--cyan); }
+.code .str { color: var(--green); }
+.code .com { color: var(--slate-400); }
+.code .num { color: var(--orange); }
+.code .self{ color: var(--slate-300); font-style: italic; }
+.code.sm  { font-size: 12.5px; line-height: 1.45; padding: 14px 16px; }
+.code.xs  { font-size: 11px;   line-height: 1.4;  padding: 12px 14px; }
+/* highlight a line inside a code block */
+.code .hl { display:block; background: rgba(254,114,2,.14);
+            margin: 0 -20px; padding: 0 20px; border-left: 3px solid var(--orange); }
+
+/* ============================================================
+   REUSABLE CONTENT COMPONENTS  (added for the talk)
+   ============================================================ */
+
+/* ---- eyebrow variants on dark backgrounds ---- */
+.eyebrow.on-dark { color: var(--teal); }
+.lead.on-dark    { color: #fff; }
+.body.on-dark    { color: var(--slate-200); }
+.muted.on-dark   { color: var(--slate-400); }
+
+/* ---- section kicker used at top of content bodies ---- */
+.kicker {
+  font-family: var(--font-head);
+  font-size: 14px; font-weight: 700; letter-spacing: 3px;
+  color: var(--teal); text-transform: uppercase; margin: 0 0 14px;
+}
+/* bigger body/lead helpers for full-canvas slides */
+.lead.xl { font-size: 26px; }
+.lead.lg { font-size: 22px; }
+.body.lg { font-size: 19px; line-height: 1.55; }
+
+/* ---- pills / tags ---- */
+.pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 14px; border-radius: 999px;
+  font-family: var(--font-head); font-size: 13px; font-weight: 700;
+  letter-spacing: .4px; line-height: 1;
+  background: var(--panel-tint); border: 1px solid var(--panel-line);
+  color: var(--navy-800);
+}
+.pill.orange { background: #FFF1E6; border-color: #FFD2AC; color: #C4560E; }
+.pill.teal   { background: #E5F7F4; border-color: #A9E6DD; color: #0E7A6E; }
+.pill.blue   { background: #E8F1FE; border-color: #B7D3FB; color: #1E5FC4; }
+.pill.dot::before { content:""; width:7px; height:7px; border-radius:50%; background: currentColor; }
+
+/* ---- tick / cross lists ---- */
+.ticks { list-style: none; margin: 0; padding: 0; }
+.ticks li {
+  position: relative; padding: 0 0 18px 38px;
+  color: var(--ink-600); font-size: 18.5px; line-height: 1.5;
+}
+.ticks.tight li { padding-bottom: 12px; font-size: 16.5px; }
+.ticks li::before {
+  position: absolute; left: 0; top: -1px;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; font-family: var(--font-head);
+}
+.ticks li.ok::before  { content:"✓"; background:#E5F7F4; color:#0E7A6E; }
+.ticks li.no::before  { content:"✕"; background:#FCE9E9; color:#C0392B; }
+.ticks li.dot::before { content:""; background:var(--orange); width:9px; height:9px; margin:6px 0 0 6px; }
+.ticks li b { color: var(--navy-800); }
+.ticks.on-dark li   { color: var(--slate-200); }
+.ticks.on-dark li b { color: #fff; }
+
+/* ---- callout / note box ---- */
+.callout {
+  border-radius: 12px; padding: 16px 20px;
+  border: 1px solid var(--panel-line); background: var(--panel-tint);
+}
+.callout .ct {
+  font-family: var(--font-head); font-weight: 700; font-size: 14px;
+  letter-spacing: .3px; margin: 0 0 6px; color: var(--navy-800);
+  display:flex; align-items:center; gap:8px;
+}
+.callout .cb { color: var(--ink-600); font-size: 17px; line-height: 1.55; margin: 0; }
+.callout.big { padding: 22px 26px; }
+.callout.big .ct { font-size: 16px; }
+.callout.big .cb { font-size: 19px; }
+.callout.warn { background:#FFF6EC; border-color:#FFD2AC; }
+.callout.warn .ct { color:#C4560E; }
+.callout.good { background:#E9F8F4; border-color:#A9E6DD; }
+.callout.good .ct { color:#0E7A6E; }
+.callout.info { background:#EAF2FE; border-color:#B7D3FB; }
+.callout.info .ct { color:#1E5FC4; }
+/* dark-slide callout */
+.callout.dark { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); }
+.callout.dark .ct { color:#fff; } .callout.dark .cb { color: var(--slate-200); }
+
+/* ---- stat / KPI tiles ---- */
+.stat { text-align: left; }
+.stat .num {
+  font-family: var(--font-head); font-weight: 700; line-height: 1;
+  font-size: 58px; color: var(--orange);
+}
+.stat .lbl { color: var(--ink-600); font-size: 16px; margin-top: 10px; line-height:1.4; }
+.stat.teal .num { color: var(--teal); }
+.stat.blue .num { color: var(--blue); }
+.stat.on-dark .num { color: var(--cyan); }
+.stat.on-dark .lbl { color: var(--slate-200); }
+
+/* ---- compare table (two/three columns) ---- */
+.cmp { width: 100%; border-collapse: separate; border-spacing: 0; }
+.cmp th, .cmp td {
+  text-align: left; padding: 18px 18px; font-size: 18px;
+  border-bottom: 1px solid var(--line-soft); color: var(--ink-600);
+}
+.cmp th {
+  font-family: var(--font-head); font-weight: 700; color: var(--navy-800);
+  font-size: 15px; letter-spacing: .3px;
+  border-bottom: 2px solid var(--panel-line);
+}
+.cmp tr td:first-child, .cmp tr th:first-child {
+  font-family: var(--font-head); font-weight: 700; color: var(--navy-800); font-size: 16px;
+}
+.cmp .win { color:#0E7A6E; font-weight:700; }
+.cmp .lose{ color:#C0392B; }
+/* compact variant for dense reference tables */
+.cmp.compact th, .cmp.compact td { padding:9px 16px; font-size:16.5px; }
+.cmp.compact th { font-size:13.5px; }
+.cmp.compact tr td:first-child, .cmp.compact tr th:first-child { font-size:15px; }
+
+/* ---- pipeline flow (horizontal steps) ---- */
+.flow { display: flex; align-items: stretch; gap: 0; }
+.flow .step {
+  flex: 1; position: relative; text-align: center;
+  padding: 34px 18px; border-radius: 16px;
+  background: var(--panel-tint); border: 1px solid var(--panel-line);
+}
+.flow .step .ic { font-size: 40px; line-height: 1; margin-bottom: 14px; }
+.flow .step .st { font-family: var(--font-head); font-weight: 700;
+                  color: var(--navy-800); font-size: 21px; margin: 0 0 6px; }
+.flow .step .sd { color: var(--ink-600); font-size: 15px; line-height: 1.4; margin: 0; }
+.flow .arrow { align-self: center; color: var(--orange); font-size: 26px;
+               font-weight: 700; padding: 0 12px; }
+.flow .step .no { position:absolute; top:10px; right:14px; font-family:var(--font-head);
+                  font-weight:700; font-size:13px; color:var(--slate-400); }
+
+/* ---- chat bubbles (Telegram-style) ---- */
+.chat { display: flex; flex-direction: column; gap: 14px; }
+.chat .row { display: flex; }
+.chat .row.me { justify-content: flex-end; }
+.bubble {
+  max-width: 78%; padding: 13px 18px; border-radius: 18px;
+  font-size: 18px; line-height: 1.45; position: relative;
+}
+.bubble .who { display:block; font-family:var(--font-head); font-weight:700;
+               font-size: 12.5px; letter-spacing:.4px; margin-bottom: 4px; opacity:.8; }
+/* incoming (user) — light grey, left */
+.chat .row.them .bubble { background: var(--panel-tint); border:1px solid var(--panel-line);
+                          color: var(--navy-800); border-bottom-left-radius: 5px; }
+.chat .row.them .who { color: var(--slate-500); }
+/* outgoing (assistant / me) — teal, right */
+.chat .row.me .bubble { background: #12A594; color: #fff; border-bottom-right-radius: 5px; }
+.chat .row.me .who { color: #CFF3ED; }
+/* dark-background chat variant */
+.chat.on-dark .row.them .bubble { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.14); color:#EAF0FF; }
+.chat.on-dark .row.them .who { color: var(--slate-300); }
+/* compact variant — for 6-bubble transcripts that must fit one slide */
+.chat.compact { gap: 8px; }
+.chat.compact .bubble { font-size: 15.5px; padding: 8px 13px; border-radius: 14px; max-width: 82%; }
+.chat.compact .bubble .who { font-size: 10.5px; margin-bottom: 2px; }
+
+/* ---- LoRA diagram helpers ---- */
+.lora-diagram { display:flex; align-items:center; gap: 26px; justify-content:center; }
+.wblock {
+  border-radius: 12px; text-align:center; padding: 16px;
+  font-family: var(--font-head); font-weight:700;
+}
+.wblock.frozen { background: #EEF2F9; border: 1.5px solid var(--panel-line);
+                 color: var(--slate-500); }
+.wblock.frozen .big { font-size: 40px; color: var(--navy-800); }
+.wblock.lora   { background: #FFF1E6; border: 1.5px solid var(--orange);
+                 color: #C4560E; }
+.lora-plus { font-size: 34px; color: var(--slate-400); font-weight:700; }
+.dim-tag { font-family:var(--font-body); font-weight:400; font-size:12px; color:var(--slate-500); margin-top:6px; }
+
+/* ---- number-badge headings for step lists ---- */
+.numlist { list-style:none; margin:0; padding:0; }
+.numlist li { position:relative; padding: 0 0 20px 50px; color: var(--ink-600);
+              font-size:18.5px; line-height:1.5; }
+.numlist li .n { position:absolute; left:0; top:-2px; width:32px; height:32px;
+                 border-radius:9px; background:var(--navy-800); color:#fff;
+                 font-family:var(--font-head); font-weight:700; font-size:16px;
+                 display:flex; align-items:center; justify-content:center; }
+.numlist li b { color: var(--navy-800); }
+
+/* ---- generic grid helpers ---- */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
+.grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.row-flex { display:flex; gap:18px; }
+
+/* ---- token strip (for the -100 masking slide) ---- */
+.tokgrid { display:flex; align-items:stretch; gap:10px; }
+.tokcol  { flex:1; display:flex; flex-direction:column; gap:10px; }
+.tokcol .tk, .tokcol .lb {
+  font-family: var(--font-mono); text-align:center; white-space:nowrap; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.tokcol .tk { padding:18px 10px; font-size:22px; font-weight:700; }
+.tokcol .lb { padding:14px 10px; font-size:19px; }
+.tokcol.ctx .tk { background:#EEF2F9; color:#3A4866; border:1px solid var(--panel-line); }
+.tokcol.ctx .lb { background:#F5F7FB; color:#AEB6CF; border:1.5px dashed #C6D0E4; }
+.tokcol.tgt .tk { background:#DFF3EE; color:#0E7A6E; border:1px solid #A9E6DD; }
+.tokcol.tgt .lb { background:#C8EBE1; color:#0E7A6E; border:1.5px solid #A9E6DD; font-weight:700; }
+.tokcap { font-family:var(--font-body); font-size:15px; color:var(--slate-500); }
+
+/* ---- big pull-quote (for punchline slides) ---- */
+.pull {
+  font-family: var(--font-head); font-weight: 700; color: #fff;
+  font-size: 40px; line-height: 1.25;
+}
+.pull .accent { color: var(--teal); }
+.pull .orange { color: var(--orange); }
+
+/* ============================================================
+   HANDS-ON / NOTEBOOK DEMO COMPONENTS
+   (the "now switch to Colab" slide that closes each section)
+   ============================================================ */
+
+/* eyebrow that marks a hands-on slide */
+.demo-eyebrow {
+  display:inline-flex; align-items:center; gap:9px;
+  font-family: var(--font-head); font-weight:700; font-size:14px;
+  letter-spacing:3px; text-transform:uppercase; color:#0E7A6E;
+  background:#E5F7F4; border:1px solid #A9E6DD; border-radius:999px;
+  padding:7px 16px;
+}
+
+/* a notebook card — one per notebook you'll open */
+.nb {
+  display:flex; align-items:flex-start; gap:16px;
+  background:#ECF9F5; border:1px solid #A9E6DD;
+  border-left:6px solid var(--teal); border-radius:12px;
+  padding:16px 20px;
+}
+.nb + .nb { margin-top:14px; }
+.nb .ic { font-size:26px; line-height:1; flex:0 0 auto; margin-top:2px; }
+.nb .meta { flex:1; min-width:0; }
+.nb .nm  { font-family:var(--font-head); font-weight:700; color:var(--navy-800);
+           font-size:18.5px; margin:0 0 3px; }
+.nb .fl  { font-family:var(--font-mono); font-size:12.5px; color:#0E7A6E;
+           background:#fff; border:1px solid #A9E6DD; border-radius:7px;
+           padding:2px 8px; display:inline-block; margin:0 0 8px;
+           max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nb .ds  { color:var(--ink-600); font-size:15.5px; line-height:1.45; margin:0; }
+.nb .tag { flex:0 0 auto; align-self:flex-start; font-family:var(--font-head);
+           font-weight:700; font-size:11px; letter-spacing:.4px; border-radius:999px;
+           padding:4px 11px; }
+.nb .tag.demo    { background:#E8F1FE; border:1px solid #B7D3FB; color:#1E5FC4; }
+.nb .tag.project { background:#FFF1E6; border:1px solid #FFD2AC; color:#C4560E; }
+
+/* compact variant when a slide lists 3+ notebooks */
+.nb.sm { padding:12px 16px; gap:12px; }
+.nb.sm .ic { font-size:21px; }
+.nb.sm .nm { font-size:16px; }
+.nb.sm .ds { font-size:13.5px; }
+.nb.sm .fl { font-size:11px; margin-bottom:6px; }
+
+/* a small "what to point out" checklist beside the notebooks */
+.watch { list-style:none; margin:0; padding:0; }
+.watch li { position:relative; padding:0 0 12px 30px; color:var(--ink-600);
+            font-size:16.5px; line-height:1.45; }
+.watch li::before { content:"👁"; position:absolute; left:0; top:0; font-size:16px; }
+.watch li b { color:var(--navy-800); }
+
+/* a running "time budget" chip for the 8-hour pacing */
+.timechip {
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--font-head); font-weight:700; font-size:12.5px;
+  color:var(--slate-500); letter-spacing:.4px;
+  background:var(--panel-tint); border:1px solid var(--panel-line);
+  border-radius:999px; padding:5px 13px;
+}
+.timechip::before { content:"⏱"; font-size:13px; }

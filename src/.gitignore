@@ -1,0 +1,17 @@
+# secrets
+.env
+
+# uv / venv
+.venv/
+uv.lock
+
+# python
+__pycache__/
+*.pyc
+
+# notebooks
+.ipynb_checkpoints/
+
+# local vector stores / data caches created by the notebooks
+**/chroma_db/
+**/*.sqlite3

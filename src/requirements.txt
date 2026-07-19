@@ -1,0 +1,14 @@
+# Top-level deps for deploying the app (Render reads this).
+# Ranges match pyproject.toml; pip resolves the rest.
+langchain>=1.2,<2
+langchain-openai>=1.1,<2
+langgraph>=1.0,<2
+langchain-community>=0.4,<1
+langchain-text-splitters>=0.3
+langchain-chroma>=0.2
+chromadb>=0.5
+langchain-mcp-adapters>=0.1
+seltz>=1.5.0
+pydantic>=2.7
+python-dotenv>=1.0
+streamlit>=1.38

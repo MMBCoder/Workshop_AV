@@ -1,0 +1,2833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From 0 to Agentic AI — DataHack Summit 2026</title>
+  <link rel="stylesheet" href="vendor/reveal.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ============================================================
+         SLIDE 1 — TITLE
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs logo-tl"><img src="assets/logo-white.png" alt="Analytics Vidhya · DataHack Summit"></div>
+        <div class="abs orb t-orb"><img src="assets/orb.png" alt=""></div>
+
+        <div class="abs t-chip">WORKSHOP</div>
+        <div class="abs t-title">From 0 to Agentic AI:<br>Design, Build &amp; Deploy with LangGraph</div>
+        <div class="abs t-subtitle">Build a production AI Knowledge Assistant — from a single LLM call to a deployed multi-agent system</div>
+
+        <div class="abs t-speaker-label">INSTRUCTOR</div>
+        <div class="abs t-rule"></div>
+        <div class="abs t-speaker-name">Alessandro Romano</div>
+
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">
+        Welcome. A full-day, hands-on, build-it-live workshop. We start from a single LLM call and end with a
+        deployed, multi-source agentic application. Every concept is applied in a Colab notebook immediately — the
+        pieces accumulate into one real system by the end of the day.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SLIDE 2 — AGENDA (9 modules in 3 phases)
+         ============================================================ -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">The map for today</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            Nine modules, one build, three phases. Each block is <b>concept → hands-on notebook</b>, and every
+            hands-on plugs into the same growing application.
+          </p>
+
+          <div class="grid3" style="align-items:stretch; gap:22px">
+            <div class="card" style="padding:22px 24px; display:flex; flex-direction:column">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+                <span class="pill teal" style="align-self:flex-start">PHASE 1 · UNDERSTAND</span><span class="timechip">~1 h</span>
+              </div>
+              <ul class="numlist" style="margin:0">
+                <li><span class="n">1</span><b>Why Agentic AI</b></li>
+                <li><span class="n">2</span><b>From LLMs to Agents</b></li>
+                <li style="padding-bottom:0"><span class="n">3</span><b>The ReAct pattern</b></li>
+              </ul>
+            </div>
+            <div class="card" style="padding:22px 24px; display:flex; flex-direction:column; border-color:var(--orange); box-shadow:0 0 0 2px var(--orange) inset">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+                <span class="pill orange" style="align-self:flex-start">PHASE 2 · BUILD</span><span class="timechip">~4.5 h</span>
+              </div>
+              <ul class="numlist" style="margin:0">
+                <li><span class="n">4</span><b>LangGraph</b></li>
+                <li><span class="n">5</span><b>Tools</b></li>
+                <li><span class="n">6</span><b>Knowledge &amp; Context</b></li>
+                <li style="padding-bottom:0"><span class="n">7</span><b>Multi-Agent Systems</b></li>
+              </ul>
+            </div>
+            <div class="card" style="padding:22px 24px; display:flex; flex-direction:column">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+                <span class="pill blue" style="align-self:flex-start">PHASE 3 · SHIP</span><span class="timechip">~1.5 h</span>
+              </div>
+              <ul class="numlist" style="margin:0">
+                <li><span class="n">8</span><b>Streamlit interface</b></li>
+                <li style="padding-bottom:0"><span class="n">9</span><b>Deployment &amp; monitoring</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout info big">
+            <p class="ct">🎯 One thing to take home</p>
+            <p class="cb">Agentic AI isn't a bigger prompt — it's a <b>control loop</b>. Once you can reason about <i>state, tools, and routing</i>, the rest (RAG, MCP, multi-agent, deployment) is just wiring you already understand.</p>
+          </div>
+        </div>
+
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Set the shape: 9 modules, 3 phases, one build. Understand → Build → Ship. Phase 2 is the meat (~4.5h).
+        Through-line: agentic = a control loop over state + tools + routing. Everything after module 3 is wiring.
+      </aside>
+    </section>
+
+    <!-- SLIDE — the app we'll build (split, fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">What we're building toward</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.15">
+            <p class="lead xl" style="margin:0 0 20px">An AI Knowledge Assistant for company operations.</p>
+            <p class="body lg" style="margin:0 0 22px">
+              Ask it a question about the company; it <b>decides where to look</b> — internal docs, Slack,
+              GitHub — retrieves what's relevant, and synthesises a <b>grounded</b> answer.
+            </p>
+            <p class="body lg" style="margin:0">
+              When it makes sense, it also <b>acts</b>: draft a Slack message, open a GitHub issue, suggest a
+              next step. By the end of the day it runs live on the internet.
+            </p>
+          </div>
+          <div style="flex:.9">
+            <div class="callout big" style="background:var(--navy-900); border-color:var(--navy-700)">
+              <p class="ct" style="color:#fff">🧩 It comes together piece by piece</p>
+              <p class="cb" style="color:var(--slate-200)">
+                No throwaway toy examples. Every module adds a real component to <i>this</i> app — you leave with
+                the whole thing, deployed and yours.
+              </p>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:22px; flex-wrap:wrap">
+              <span class="pill teal dot">LangGraph</span>
+              <span class="pill blue dot">RAG</span>
+              <span class="pill orange dot">MCP</span>
+              <span class="pill teal dot">Multi-agent</span>
+              <span class="pill blue dot">Streamlit</span>
+              <span class="pill orange dot">Render</span>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Anchor the target. One coherent app — an ops knowledge assistant that retrieves from docs/Slack/GitHub
+        and can take actions. Stress: no throwaway demos, everything feeds the final deployed system.
+      </aside>
+    </section>
+
+    <!-- SLIDE — how the day runs (rhythm + notebooks) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">How the day runs</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            Every module follows the same rhythm. I explain the idea on a few slides, then we <b>open a notebook
+            and run it together</b>. The slides are the map; the notebooks are the territory.
+          </p>
+
+          <div class="flow">
+            <div class="step"><span class="no">A</span><div class="ic">🧠</div><p class="st">Concept</p><p class="sd">Short slides — the mental model &amp; the "why"</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">B</span><div class="ic">📓</div><p class="st">Hands-on</p><p class="sd">Open the notebook, run it, read the output</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">C</span><div class="ic">🧩</div><p class="st">Plug in</p><p class="sd">Fold what we built into the assistant</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">D</span><div class="ic">❓</div><p class="st">Q &amp; A</p><p class="sd">Breathe, ask, break — then next module</p></div>
+          </div>
+
+          <div class="callout good big">
+            <p class="ct">📓 Look for the teal slide</p>
+            <p class="cb">Each section closes on a <b>Hands-on</b> slide that names the exact notebook(s) to open and what to watch for. That's your cue to open the notebook. Everything is in the shared repo — run it locally (<span style="font-family:var(--font-mono)">uv</span>), or upload to Colab.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Explain the format so people know when to code vs listen. The teal "Hands-on" slide is the switch-to-Colab
+        signal. Reassure: notebooks are ready in the repo; no one has to type from scratch under time pressure.
+      </aside>
+    </section>
+
+    <!-- SLIDE — setup / requirements -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Before we start — get set up</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="grid2" style="gap:48px">
+            <div>
+              <p class="kicker">WHAT YOU NEED</p>
+              <ul class="ticks" style="margin-top:10px">
+                <li class="dot"><b>Basic Python</b> — functions, classes, virtual environments</li>
+                <li class="dot"><b>An OpenAI API key</b> — for LLM access</li>
+                <li class="dot"><b>A Tavily or Seltz AI key</b> — for web search / tools</li>
+                <li class="dot" style="padding-bottom:0"><b>A Render account</b> <span style="color:var(--slate-500); font-weight:400">(optional)</span> — to deploy; you can also just run it locally</li>
+              </ul>
+            </div>
+            <div>
+              <p class="kicker">WHERE WE'LL WORK</p>
+              <ul class="ticks" style="margin-top:10px">
+                <li class="ok"><b>Locally with <span style="font-family:var(--font-mono)">uv</span></b> — the recommended setup for everything</li>
+                <li class="ok"><b>Google Colab</b> — an option: upload a notebook &amp; run</li>
+                <li class="ok"><b>A laptop + internet</b> — able to install packages</li>
+                <li class="ok" style="padding-bottom:0"><b>The shared repo</b> — cloned and ready to go</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout warn big">
+            <p class="ct">⚠️ Two minutes now saves twenty later</p>
+            <p class="cb">Put your keys in a <b><span style="font-family:var(--font-mono)">.env</span></b> file today and load them with <span style="font-family:var(--font-mono)">python-dotenv</span>. Never hard-code a key in a notebook cell — it <i>will</i> end up in git.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Housekeeping. Confirm keys work before module 1. Push the .env habit hard now — prevents leaked-key
+        incidents and makes deployment painless later.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 01 — WHY AGENTIC AI
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">01</div>
+        <div class="abs s-label">SECTION · UNDERSTAND</div>
+        <div class="abs s-title">Why Agentic AI</div>
+        <div class="abs s-desc">Deterministic code, a single LLM call, or a full agent — the trade-offs, and when each is the right tool.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">Framing section. The goal is judgement: agents are powerful and expensive — know when to reach for one. No notebook here; it's conceptual.</aside>
+    </section>
+
+    <!-- SLIDE — three kinds of systems (3 cards, fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Three ways to build a system</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            The same task can be solved three ways. They differ in <b>who decides what happens next</b> — your code,
+            or the model.
+          </p>
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:26px; display:flex; flex-direction:column">
+              <span class="pill" style="margin-bottom:14px; align-self:flex-start">DETERMINISTIC</span>
+              <p class="lead lg" style="margin:0 0 10px">Hard-coded logic</p>
+              <p class="body lg" style="margin:0 0 14px">You write every branch. <b>if/else</b>, pipelines, rules.</p>
+              <ul class="ticks tight" style="margin:0"><li class="ok">Predictable, cheap, testable</li><li class="no" style="padding-bottom:0">Brittle; can't handle the unforeseen</li></ul>
+            </div>
+            <div class="card" style="padding:26px; display:flex; flex-direction:column">
+              <span class="pill blue" style="margin-bottom:14px; align-self:flex-start">LLM-BASED</span>
+              <p class="lead lg" style="margin:0 0 10px">A single model call</p>
+              <p class="body lg" style="margin:0 0 14px"><b>prompt → response.</b> The model reasons once, you use the output.</p>
+              <ul class="ticks tight" style="margin:0"><li class="ok">Flexible language, fast to ship</li><li class="no" style="padding-bottom:0">No memory, no actions, no loop</li></ul>
+            </div>
+            <div class="card" style="padding:26px; display:flex; flex-direction:column; border-color:var(--orange); box-shadow:0 0 0 2px var(--orange) inset">
+              <span class="pill orange" style="margin-bottom:14px; align-self:flex-start">AGENTIC</span>
+              <p class="lead lg" style="margin:0 0 10px">A decision loop</p>
+              <p class="body lg" style="margin:0 0 14px">The model <b>chooses actions</b>, observes results, and repeats until done.</p>
+              <ul class="ticks tight" style="margin:0"><li class="ok">Dynamic, tool-using, multi-step</li><li class="dot" style="padding-bottom:0">Costly, harder to control</li></ul>
+            </div>
+          </div>
+          <p class="muted" style="margin:0; font-size:15px">The dial isn't "how smart" — it's <b>how much control you hand to the model</b>. More autonomy = more capability <i>and</i> more risk.</p>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Core distinction: control ownership. Deterministic = your code decides. LLM call = model decides once.
+        Agent = model decides repeatedly in a loop. This spectrum recurs all day.
+      </aside>
+    </section>
+
+    <!-- SLIDE — the autonomy spectrum (schema) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">It's a spectrum, not three boxes</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            In reality these blur into a <b>continuum of autonomy</b>. Each rung hands a little more control to the
+            model — and trades predictability for flexibility.
+          </p>
+
+          <div class="grow" style="display:flex; flex-direction:column; justify-content:center; gap:20px">
+            <div style="display:flex; align-items:stretch; gap:12px">
+              <div class="card" style="flex:1; padding:16px 14px; text-align:center">
+                <p class="lead" style="margin:0 0 6px; font-size:16px">📏 Rules</p>
+                <p class="muted" style="margin:0; font-size:13px">Hard-coded if/else &amp; pipelines</p>
+              </div>
+              <div class="card" style="flex:1; padding:16px 14px; text-align:center">
+                <p class="lead" style="margin:0 0 6px; font-size:16px">💬 Single LLM call</p>
+                <p class="muted" style="margin:0; font-size:13px">One prompt → one response</p>
+              </div>
+              <div class="card" style="flex:1; padding:16px 14px; text-align:center; border-color:#FFD2AC">
+                <p class="lead" style="margin:0 0 6px; font-size:16px">🔧 LLM + tools</p>
+                <p class="muted" style="margin:0; font-size:13px">One call that can act, once</p>
+              </div>
+              <div class="card" style="flex:1; padding:16px 14px; text-align:center; border-color:var(--orange); box-shadow:0 0 0 2px var(--orange) inset">
+                <p class="lead" style="margin:0 0 6px; font-size:16px">🔁 ReAct agent</p>
+                <p class="muted" style="margin:0; font-size:13px">Loop: reason · act · observe</p>
+              </div>
+              <div class="card" style="flex:1; padding:16px 14px; text-align:center; border-color:var(--orange); box-shadow:0 0 0 2px var(--orange) inset">
+                <p class="lead" style="margin:0 0 6px; font-size:16px">🕸️ Multi-agent</p>
+                <p class="muted" style="margin:0; font-size:13px">Several agents coordinating</p>
+              </div>
+            </div>
+
+            <!-- axis -->
+            <div style="height:10px; border-radius:6px; background:linear-gradient(90deg,#2D7FF9,#5CD0FF,#FFD2AC,#FE7202);"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center">
+              <span style="font-family:var(--font-head); font-weight:700; font-size:14px; color:var(--blue)">← YOUR CODE decides the next step</span>
+              <span class="muted" style="font-size:13.5px">predictable &amp; cheap&nbsp;&nbsp;↔&nbsp;&nbsp;flexible &amp; capable</span>
+              <span style="font-family:var(--font-head); font-weight:700; font-size:14px; color:var(--orange)">THE MODEL decides the next step →</span>
+            </div>
+          </div>
+
+          <div class="callout info big">
+            <p class="ct">🧭 Where we'll live today</p>
+            <p class="cb">Most of the workshop sits in the <b>middle-right</b>: an LLM with tools, wrapped in a ReAct loop, orchestrated by LangGraph. We touch multi-agent at the end — <b>only</b> once a single agent stops being enough.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The schema slide. Push back on the "3 buckets" framing from the previous slide: it's a continuum. As you go
+        right, control shifts from your code to the model — you gain flexibility, you lose predictability. Point at
+        where the workshop lives (LLM+tools → ReAct → LangGraph), and that multi-agent is a last resort.
+      </aside>
+    </section>
+
+    <!-- SLIDE — one task, three ways (worked example) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">One task, three ways</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="callout" style="background:var(--navy-900); border-color:var(--navy-700); padding:16px 22px">
+            <p class="cb" style="color:#fff; font-size:18px; margin:0">
+              💬 A colleague asks: <b style="color:var(--cyan)">"Who owns the billing service, and can you ping them about the failing deploy?"</b>
+            </p>
+          </div>
+
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:22px 24px; display:flex; flex-direction:column">
+              <span class="pill" style="margin-bottom:12px; align-self:flex-start">DETERMINISTIC</span>
+              <p class="body lg" style="margin:0 0 14px; flex:1">Works <i>only</i> if someone hard-coded this exact question → lookup. Any rewording breaks it.</p>
+              <p style="margin:0; font-family:var(--font-head); font-weight:700; color:#C0392B; font-size:15px">✕ Too rigid for open questions</p>
+            </div>
+            <div class="card" style="padding:22px 24px; display:flex; flex-direction:column">
+              <span class="pill blue" style="margin-bottom:12px; align-self:flex-start">SINGLE LLM CALL</span>
+              <p class="body lg" style="margin:0 0 14px; flex:1">Understands the request &amp; writes a lovely reply — but doesn't know your org and <b>can't</b> ping anyone. May invent an owner.</p>
+              <p style="margin:0; font-family:var(--font-head); font-weight:700; color:#C4560E; font-size:15px">⚠ Fluent, but no facts &amp; no actions</p>
+            </div>
+            <div class="card" style="padding:22px 24px; display:flex; flex-direction:column; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset">
+              <span class="pill teal" style="margin-bottom:12px; align-self:flex-start">AGENT</span>
+              <p class="body lg" style="margin:0 0 14px; flex:1"><b>Searches</b> internal docs → finds the owner → <b>drafts a Slack ping</b> → confirms. Grounded, and it acts.</p>
+              <p style="margin:0; font-family:var(--font-head); font-weight:700; color:#0E7A6E; font-size:15px">✓ Decides the path, uses tools</p>
+            </div>
+          </div>
+
+          <div class="callout good big">
+            <p class="ct">✅ Why this one needs an agent</p>
+            <p class="cb">The steps <b>aren't known in advance</b> — which tool, in what order, depends on what the docs say. That's the exact signature of a job for an agent, and it's our assistant's bread and butter.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The concrete example. Walk the same request down all three approaches. Deterministic can't generalise; the
+        single call is fluent but ungrounded and inert; the agent retrieves, decides, and acts. This is exactly the
+        final app's job — plant it here. Sets up the "when is an agent right" judgement next.
+      </aside>
+    </section>
+
+    <!-- SLIDE — when agents (and when overkill) (2-col, fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">When is an agent the right call?</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="grid2" style="gap:48px">
+            <div>
+              <p class="kicker" style="color:#0E7A6E">✅ REACH FOR AN AGENT WHEN</p>
+              <ul class="ticks" style="margin-top:10px">
+                <li class="ok">The steps <b>aren't known in advance</b> — they depend on what's found</li>
+                <li class="ok">The task needs <b>tools</b> — search, APIs, a database</li>
+                <li class="ok">It requires <b>iterative reasoning</b> — try, observe, adjust</li>
+                <li class="ok" style="padding-bottom:0">You must <b>choose</b> among many possible actions</li>
+              </ul>
+            </div>
+            <div>
+              <p class="kicker" style="color:#C0392B">🛑 AN AGENT IS OVERKILL WHEN</p>
+              <ul class="ticks" style="margin-top:10px">
+                <li class="no">A fixed pipeline already solves it</li>
+                <li class="no">One prompt gives a good enough answer</li>
+                <li class="no">Latency &amp; cost matter more than flexibility</li>
+                <li class="no" style="padding-bottom:0">You need <b>guaranteed</b>, auditable behaviour</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout good big">
+            <p class="ct">💡 The rule of thumb</p>
+            <p class="cb">Use the <b>least</b> autonomy that solves the problem. Start deterministic, add an LLM call where language matters, and only reach for a full agent when the <i>path itself</i> must be decided at runtime.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Judgement slide. Real production systems mix all three. "Least autonomy that works" keeps cost, latency
+        and debuggability sane. Our assistant genuinely needs an agent because the retrieval path is dynamic.
+      </aside>
+    </section>
+
+    <!-- SLIDE — real-world use cases in production (context) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Where agents already earn their keep</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            This isn't hypothetical — agentic systems are in production today. The pattern is always the same:
+            <b>dynamic path + real tools + a goal to reach</b>.
+          </p>
+
+          <div class="grid3" style="align-items:stretch; gap:14px">
+            <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">💻 Coding assistants</p>
+              <p class="body" style="margin:0; font-size:15px">Read the repo, edit files, run tests, fix what fails — loop until done.</p>
+            </div>
+            <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🎧 Customer support</p>
+              <p class="body" style="margin:0; font-size:15px">Look up the account, check policy, issue a refund or escalate.</p>
+            </div>
+            <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🔎 Deep research</p>
+              <p class="body" style="margin:0; font-size:15px">Search, read, cross-check sources, synthesise a cited report.</p>
+            </div>
+            <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">📊 Data &amp; ops analysts</p>
+              <p class="body" style="margin:0; font-size:15px">Question → SQL → run it → interpret → draft the summary.</p>
+            </div>
+            <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">⚙️ Workflow automation</p>
+              <p class="body" style="margin:0; font-size:15px">Triage a ticket, gather context, take the next action or hand off.</p>
+            </div>
+            <div class="card" style="padding:16px 20px; display:flex; flex-direction:column; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🧭 Knowledge assistants</p>
+              <p class="body" style="margin:0; font-size:15px"><b>Our build</b> — answer over docs, Slack &amp; GitHub, then act.</p>
+            </div>
+          </div>
+
+          <div class="callout info">
+            <p class="ct">🎯 Notice the shared shape</p>
+            <p class="cb">All of them <b>retrieve information, reason over it, and take actions</b> across multiple steps. Learn that shape once and you can build any of them — which is exactly what today is about.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Covers the syllabus point "real-world use cases in production." Six familiar examples, all sharing the same
+        shape (retrieve → reason → act, over multiple steps). Land it: our knowledge assistant is a superset of
+        these patterns, so the skills transfer directly. Motivates the rest of the day.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 02 — FROM LLMs TO AGENTS
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">02</div>
+        <div class="abs s-label">SECTION · UNDERSTAND</div>
+        <div class="abs s-title">From LLMs to Agents</div>
+        <div class="abs s-desc">A plain model call can't remember, act, or loop. We add those three things — and get an agent.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">The bridge. We take the humble prompt→response and grow it into a loop, one missing capability at a time.</aside>
+    </section>
+
+    <!-- SLIDE — how an LLM works in an app + limits (fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">A plain LLM call, and where it stops</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            In an application, an LLM is a pure function: text in, text out. Powerful — but on its own it hits
+            three hard walls.
+          </p>
+
+          <div style="display:flex; align-items:center; justify-content:center; gap:0">
+            <div class="card" style="padding:20px 26px; text-align:center"><div style="font-size:30px">💬</div><p class="lead" style="margin:8px 0 0; font-size:18px">prompt</p></div>
+            <div style="font-size:30px; color:var(--orange); font-weight:700; padding:0 18px">→</div>
+            <div class="card" style="padding:20px 30px; text-align:center; border-color:var(--blue); box-shadow:0 0 0 2px var(--blue) inset"><div style="font-size:30px">🧠</div><p class="lead" style="margin:8px 0 0; font-size:18px">LLM</p></div>
+            <div style="font-size:30px; color:var(--orange); font-weight:700; padding:0 18px">→</div>
+            <div class="card" style="padding:20px 26px; text-align:center"><div style="font-size:30px">📝</div><p class="lead" style="margin:8px 0 0; font-size:18px">response</p></div>
+          </div>
+
+          <div class="grid3" style="align-items:stretch">
+            <div class="callout warn">
+              <p class="ct">🧠 No memory</p>
+              <p class="cb">Each call is stateless. It forgets everything the moment it replies.</p>
+            </div>
+            <div class="callout warn">
+              <p class="ct">🖐️ No actions</p>
+              <p class="cb">It can describe an API call, but it cannot make one. Just text.</p>
+            </div>
+            <div class="callout warn">
+              <p class="ct">🔁 No control flow</p>
+              <p class="cb">One shot only. It can't decide to try again, or take a different step.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Establish the baseline everyone knows, then name the three gaps precisely: no memory, no actions, no
+        control flow. The next slide makes each wall concrete with our own app's questions.
+      </aside>
+    </section>
+
+    <!-- SLIDE — watch it hit the walls (concrete failures on our app) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Watch it hit the walls</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            Point our future assistant at three real company-ops questions with <b>nothing but a prompt</b>. Each
+            one fails in a different, revealing way.
+          </p>
+
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:0; display:flex; flex-direction:column; overflow:hidden">
+              <div style="background:#FDF2F2; padding:14px 18px; border-bottom:1px solid #F3B4B4">
+                <p class="muted" style="margin:0; font-size:13px; color:#C0392B">ASK</p>
+                <p class="body" style="margin:2px 0 0; color:var(--navy-800); font-size:15.5px">"How many PTO days do I get?"</p>
+              </div>
+              <div style="padding:16px 18px; flex:1">
+                <p style="margin:0 0 6px; font-family:var(--font-head); font-weight:700; color:#C0392B; font-size:15px">🧠 Hallucinates</p>
+                <p class="body" style="margin:0; font-size:15px">Invents "25 days" confidently — it has never seen your HR policy.</p>
+              </div>
+            </div>
+            <div class="card" style="padding:0; display:flex; flex-direction:column; overflow:hidden">
+              <div style="background:#FDF2F2; padding:14px 18px; border-bottom:1px solid #F3B4B4">
+                <p class="muted" style="margin:0; font-size:13px; color:#C0392B">ASK</p>
+                <p class="body" style="margin:2px 0 0; color:var(--navy-800); font-size:15.5px">"Ping the billing owner on Slack."</p>
+              </div>
+              <div style="padding:16px 18px; flex:1">
+                <p style="margin:0 0 6px; font-family:var(--font-head); font-weight:700; color:#C0392B; font-size:15px">🖐️ Can't act</p>
+                <p class="body" style="margin:0; font-size:15px">Writes a lovely message — but has no way to actually send it.</p>
+              </div>
+            </div>
+            <div class="card" style="padding:0; display:flex; flex-direction:column; overflow:hidden">
+              <div style="background:#FDF2F2; padding:14px 18px; border-bottom:1px solid #F3B4B4">
+                <p class="muted" style="margin:0; font-size:13px; color:#C0392B">ASK</p>
+                <p class="body" style="margin:2px 0 0; color:var(--navy-800); font-size:15.5px">"And who did I just mention?"</p>
+              </div>
+              <div style="padding:16px 18px; flex:1">
+                <p style="margin:0 0 6px; font-family:var(--font-head); font-weight:700; color:#C0392B; font-size:15px">🔁 Forgets</p>
+                <p class="body" style="margin:0; font-size:15px">Blank stare — the previous turn is already gone.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout info big">
+            <p class="ct">🎯 The gaps map to the fixes</p>
+            <p class="cb"><b>Hallucinates → give it knowledge (RAG).  Can't act → give it tools.  Forgets → give it state.</b> The rest of the workshop is literally closing these three walls, one at a time.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Make the abstract walls visceral with our own app's questions. Deliver each failure as a little demo beat.
+        Then the payoff: each wall names a later module (RAG / tools / state). This is the roadmap for the day,
+        disguised as three failures.
+      </aside>
+    </section>
+
+    <!-- SLIDE — prompting patterns that matter (depth from Prompt Eng notebook) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">First, get the single call right</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            An agent is many LLM calls in a loop — so a sloppy prompt fails many times over. A few patterns do
+            most of the work:
+          </p>
+          <div class="grid2" style="gap:26px 48px">
+            <div class="card" style="padding:20px 24px">
+              <p class="lead" style="margin:0 0 8px; font-size:19px">🧾 Structured outputs</p>
+              <p class="body lg" style="margin:0">Ask for JSON against a <b>Pydantic</b> schema, not prose. Now the output is <i>parseable</i> — the backbone of tools &amp; routing.</p>
+            </div>
+            <div class="card" style="padding:20px 24px">
+              <p class="lead" style="margin:0 0 8px; font-size:19px">🎯 Few-shot examples</p>
+              <p class="body lg" style="margin:0">Show 2–3 worked examples. The model imitates format and tone far more reliably than from instructions alone.</p>
+            </div>
+            <div class="card" style="padding:20px 24px">
+              <p class="lead" style="margin:0 0 8px; font-size:19px">🧩 Templates &amp; roles</p>
+              <p class="body lg" style="margin:0">Separate <b>system</b> (rules, persona) from <b>user</b> (the task). Reusable, testable, easier to reason about.</p>
+            </div>
+            <div class="card" style="padding:20px 24px">
+              <p class="lead" style="margin:0 0 8px; font-size:19px">🧠 Reasoning prompts</p>
+              <p class="body lg" style="margin:0">Chain-of-thought &amp; step-by-step for hard tasks — the seed of the ReAct "Thought" we'll formalise next.</p>
+            </div>
+          </div>
+          <p class="muted" style="margin:0; font-size:15px"><b>Structured output</b> is the one to internalise — it's what lets code trust the model's answer.</p>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        These come straight from the prompt-engineering notebook. Emphasise structured outputs (Pydantic) — it's
+        the bridge to tool-calling and state. Reasoning prompts foreshadow ReAct's "Thought".
+      </aside>
+    </section>
+
+    <!-- SLIDE — tool calling: the model requests, your runtime runs (schema) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Tool calling: the model asks, your code acts</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            This is how we break the "can't act" wall — and it's just structured output with a job. You hand the
+            model some functions; it replies with a <b>request to call one</b>. It never runs code itself.
+          </p>
+
+          <div class="grow" style="display:flex; align-items:center; justify-content:center">
+            <svg viewBox="0 0 1120 250" style="width:100%; max-width:1080px; height:auto" role="img"
+                 aria-label="Flow: you describe tools to the model; the model returns a tool-call request with name and arguments; your runtime executes the function; the result is fed back to the model as an observation.">
+              <g font-family="Arial, Helvetica, sans-serif">
+                <!-- 1 describe -->
+                <rect x="20" y="70" width="215" height="110" rx="16" fill="#F3F6FC" stroke="#B9C7DF"/>
+                <text x="127" y="104" text-anchor="middle" font-size="17" font-weight="700" fill="#0F2247">① You describe tools</text>
+                <text x="127" y="132" text-anchor="middle" font-size="13.5" fill="#3A4866">name · args schema</text>
+                <text x="127" y="152" text-anchor="middle" font-size="13.5" fill="#3A4866">· description</text>
+
+                <!-- 2 model requests -->
+                <rect x="300" y="70" width="240" height="110" rx="16" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2"/>
+                <text x="420" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#1E5FC4">② Model returns a</text>
+                <text x="420" y="122" text-anchor="middle" font-size="17" font-weight="700" fill="#1E5FC4">tool-call request</text>
+                <text x="420" y="152" text-anchor="middle" font-family="Consolas, monospace" font-size="13.5" fill="#3A4866">{name, args}</text>
+
+                <!-- 3 runtime runs -->
+                <rect x="605" y="70" width="230" height="110" rx="16" fill="#FFF3E9" stroke="#FE7202" stroke-width="2"/>
+                <text x="720" y="104" text-anchor="middle" font-size="17" font-weight="700" fill="#C4560E">③ Your runtime</text>
+                <text x="720" y="126" text-anchor="middle" font-size="17" font-weight="700" fill="#C4560E">runs the function</text>
+                <text x="720" y="154" text-anchor="middle" font-size="13.5" fill="#3A4866">the actual API / DB call</text>
+
+                <!-- 4 result back -->
+                <rect x="900" y="70" width="200" height="110" rx="16" fill="#E9F8F4" stroke="#12A594" stroke-width="2"/>
+                <text x="1000" y="104" text-anchor="middle" font-size="17" font-weight="700" fill="#0E7A6E">④ Result</text>
+                <text x="1000" y="126" text-anchor="middle" font-size="17" font-weight="700" fill="#0E7A6E">back to model</text>
+                <text x="1000" y="154" text-anchor="middle" font-size="13.5" fill="#3A4866">as an observation</text>
+
+                <!-- arrows -->
+                <g stroke="#8A93A8" stroke-width="2.5" fill="none">
+                  <path d="M235 125 L298 125" marker-end="url(#ah2)"/>
+                  <path d="M540 125 L603 125" marker-end="url(#ah2)"/>
+                  <path d="M835 125 L898 125" marker-end="url(#ah2)"/>
+                </g>
+                <defs>
+                  <marker id="ah2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+                    <path d="M0,0 L7,3 L0,6 Z" fill="#8A93A8"/>
+                  </marker>
+                </defs>
+              </g>
+            </svg>
+          </div>
+
+          <div class="callout warn big">
+            <p class="ct">⚠️ The model never executes anything</p>
+            <p class="cb">It only <b>chooses</b> a tool and fills in the arguments — safe by design. <b>You</b> stay in control of what actually runs. That single request → run → feed-back is one turn of the agent loop.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The core Module 2 concept. Tool calling = structured output that names a function + args. Stress the safety
+        point: the model only REQUESTS; your runtime decides whether/how to run it. Steps ②③④ are exactly one turn
+        of ReAct (Action → run → Observation) — this is the seam we open in Module 3.
+      </aside>
+    </section>
+
+    <!-- SLIDE — the three additions that make an agent (fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Add three things → you have an agent</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.05">
+            <ul class="ticks" style="margin:0">
+              <li class="ok"><b>Tools</b> — give the model functions it can call to <i>act</i> on the world</li>
+              <li class="ok"><b>Memory / state</b> — carry context forward across steps</li>
+              <li class="ok" style="padding-bottom:0"><b>A loop</b> — let it decide the next step, again and again, until the goal is met</li>
+            </ul>
+            <p class="body lg" style="margin:26px 0 0">
+              That's the whole idea. An <b>agent</b> is an LLM placed inside a <b>decision-making loop</b>, with
+              tools to act and state to remember.
+            </p>
+          </div>
+          <div style="flex:.95">
+            <div class="callout big" style="background:var(--navy-900); border-color:var(--navy-700)">
+              <p class="ct" style="color:#fff">🔁 The agent loop, informally</p>
+              <p class="cb" style="color:var(--slate-200)">
+                <b>think</b> → <b>pick a tool</b> → <b>act</b> → <b>observe the result</b> → repeat …<br>
+                → <b>stop</b> when the answer is ready.
+              </p>
+            </div>
+            <p class="muted" style="margin:18px 0 0; font-size:15px">
+              This loop is the heart of everything we build today. Next: the most common way to structure it — <b>ReAct</b>.
+            </p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The definition slide. Agent = LLM + tools + state + loop. Keep the loop verbal here; ReAct formalises it.
+        Next: we don't build the loop by hand yet — we press the "easy button" and watch a prebuilt one work.
+      </aside>
+    </section>
+
+    <!-- SLIDE — the easy button: a LangGraph agent in ~5 lines -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">The easy button: an agent in ~5 lines</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.2">
+<pre class="code" style="margin:0; font-size:14.5px; line-height:1.7"><span class="kw">from</span> langchain.agents <span class="kw">import</span> create_agent
+
+<span class="fn">@tool</span>
+<span class="kw">def</span> <span class="fn">web_search</span>(query: str) -> str:
+    <span class="str">"""Search the web for current info."""</span>
+    <span class="kw">return</span> search_client.<span class="fn">run</span>(query)
+
+agent = <span class="fn">create_agent</span>(llm, tools=[web_search])
+
+agent.<span class="fn">invoke</span>({<span class="str">"messages"</span>: [(<span class="str">"user"</span>, <span class="str">"..."</span>)]})</pre>
+            <p class="muted" style="margin:16px 0 0; font-size:14.5px">
+              LangGraph ships the whole loop prebuilt. We use it <b>today</b> — then rebuild it by hand in Module 4 to see inside.
+            </p>
+          </div>
+          <div style="flex:1">
+            <p class="kicker">WHAT THOSE 5 LINES DO</p>
+            <ul class="ticks tight" style="margin-top:10px">
+              <li class="ok">Wire the LLM to the tool</li>
+              <li class="ok">Run the <b>reason → act → observe</b> loop for you</li>
+              <li class="ok">Stop when the answer is ready</li>
+              <li class="ok" style="padding-bottom:0">Return the full <b>message trace</b> to inspect</li>
+            </ul>
+            <div class="callout info" style="margin-top:18px">
+              <p class="ct">🎓 Why start with the easy button?</p>
+              <p class="cb">See a <b>working agent</b> first, so the concepts land against something real. Understanding (Module 3) and rebuilding (Module 4) come next.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The payoff of Module 2: a real agent in ~5 lines with create_react_agent. Run it, then open the message
+        trace — point out the tool-call request, the tool result, the final answer (the loop from the schema slide,
+        automated). Set expectations clearly: prebuilt now → ReAct explains it (M3) → we rebuild it (M4).
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 2: two teaching demos -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · First calls → first agent</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.3">
+            <span class="demo-eyebrow">OPEN THE NOTEBOOK</span>
+            <div style="margin-top:14px">
+              <div class="nb">
+                <div class="ic">💬</div>
+                <div class="meta">
+                  <p class="nm">Talking to the Model</p>
+                  <span class="fl">Module_2_Demo_Talking_to_the_Model.ipynb</span>
+                  <p class="ds">Plain call &amp; streaming → hit the 3 walls → <b>structured outputs</b> (Pydantic) → a <span style="font-family:var(--font-mono)">@tool</span> the model requests.</p>
+                </div>
+                <span class="tag demo">DEMO</span>
+              </div>
+              <div class="nb">
+                <div class="ic">🤖</div>
+                <div class="meta">
+                  <p class="nm">Your First Agent</p>
+                  <span class="fl">Module_2_Demo_Your_First_Agent.ipynb</span>
+                  <p class="ds"><span style="font-family:var(--font-mono)">create_agent</span> + a <b>web-search</b> tool answers a question end-to-end — a working agent in ~5 lines.</p>
+                </div>
+                <span class="tag demo">DEMO</span>
+              </div>
+            </div>
+          </div>
+          <div style="flex:.75">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li>The three walls, live</li>
+              <li>Structured output = trustable data</li>
+              <li>The <b>message trace</b>: request → run → answer</li>
+              <li>The agent <b>acts</b> — search breaks a wall</li>
+            </ul>
+            <p class="muted" style="margin:14px 0 0; font-size:13.5px">Both are teaching demos. The real app build starts in <b>Module 4</b>.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Two teaching demos. First: calls, walls, structured output, a tool request. Second: a prebuilt agent + web
+        search answering end-to-end — see an agent work before we open the hood. NOT the project — the real
+        Knowledge Assistant is built on LangGraph from Module 4. Notebooks run standalone.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 03 — ReAct PATTERN
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">03</div>
+        <div class="abs s-label">THE CORE LOOP · UNDERSTAND</div>
+        <div class="abs s-title">The ReAct pattern</div>
+        <div class="abs s-desc">Reason + Act: the Thought → Action → Observation loop that lets a model use tools deliberately.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">The canonical agent loop. Slow down — everything in LangGraph later is a structured version of this.</aside>
+    </section>
+
+    <!-- SLIDE — the ReAct loop diagram (fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Thought → Action → Observation</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            ReAct interleaves <b>reasoning</b> and <b>acting</b>. The model narrates a thought, takes one action,
+            reads the result — then decides whether to loop again or answer.
+          </p>
+
+          <div class="grow" style="display:flex; align-items:center; justify-content:center">
+            <svg viewBox="0 0 1120 300" style="width:100%; max-width:1080px; height:auto" role="img"
+                 aria-label="A cycle: Thought leads to Action, Action produces an Observation, which feeds back into the next Thought, until a Final Answer is produced.">
+              <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+                <rect x="70"  y="90" width="230" height="120" rx="18" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2"/>
+                <text x="185" y="140" font-size="24" font-weight="700" fill="#1E5FC4">💭 Thought</text>
+                <text x="185" y="172" font-size="15" fill="#3A4866">reason about</text>
+                <text x="185" y="192" font-size="15" fill="#3A4866">what to do next</text>
+
+                <rect x="445" y="90" width="230" height="120" rx="18" fill="#FFF3E9" stroke="#FE7202" stroke-width="2"/>
+                <text x="560" y="140" font-size="24" font-weight="700" fill="#C4560E">⚙️ Action</text>
+                <text x="560" y="172" font-size="15" fill="#3A4866">call a tool with</text>
+                <text x="560" y="192" font-size="15" fill="#3A4866">chosen arguments</text>
+
+                <rect x="820" y="90" width="230" height="120" rx="18" fill="#E9F8F4" stroke="#12A594" stroke-width="2"/>
+                <text x="935" y="140" font-size="24" font-weight="700" fill="#0E7A6E">👁️ Observation</text>
+                <text x="935" y="172" font-size="15" fill="#3A4866">read the tool's</text>
+                <text x="935" y="192" font-size="15" fill="#3A4866">result</text>
+              </g>
+              <g stroke="#8A93A8" stroke-width="2.5" fill="none">
+                <path d="M300 150 L440 150" marker-end="url(#ah)"/>
+                <path d="M675 150 L815 150" marker-end="url(#ah)"/>
+              </g>
+              <path d="M935 210 C935 278, 185 278, 185 214" stroke="#8A93A8" stroke-width="2.5" fill="none" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+              <rect x="446" y="258" width="228" height="22" fill="#ffffff"/>
+              <text x="560" y="274" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-size="14" fill="#7E8AA3">loop until the answer is ready</text>
+              <defs>
+                <marker id="ah" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+                  <path d="M0,0 L7,3 L0,6 Z" fill="#8A93A8"/>
+                </marker>
+              </defs>
+            </svg>
+          </div>
+
+          <div class="callout info big">
+            <p class="ct">🧭 Why interleave, not plan-then-do?</p>
+            <p class="cb">Because each observation <b>changes what the next step should be</b>. Reasoning <i>between</i> actions lets the agent adapt to what it just learned — instead of committing to a plan that reality breaks.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Walk the cycle once with a concrete example (e.g. "what's our refund policy?" → search docs → read →
+        answer). The dashed loop-back is the key: reasoning happens between every action.
+      </aside>
+    </section>
+
+    <!-- SLIDE — ReAct in code + failure modes (split, code fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">A minimal ReAct loop — and how it breaks</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.15">
+<pre class="code" style="margin:0; font-size:15px; line-height:1.65"><span class="com"># the loop, stripped to its essence</span>
+<span class="kw">while</span> <span class="kw">not</span> done:
+    thought = llm(<span class="fn">prompt</span>(history))
+    <span class="kw">if</span> thought.is_final:
+        <span class="kw">return</span> thought.answer
+    <span class="com"># the model chose a tool + args</span>
+    result = tools[thought.tool](**thought.args)
+    history.<span class="fn">append</span>(thought, result)   <span class="com"># observe</span></pre>
+            <p class="muted" style="margin:16px 0 0; font-size:15px">
+              LangGraph will give us this loop with <b>state, retries and routing</b> handled properly — but this is all it is underneath.
+            </p>
+          </div>
+          <div style="flex:1">
+            <p class="kicker" style="color:#C0392B">⚠️ FAILURE MODES TO WATCH</p>
+            <ul class="ticks" style="margin-top:10px">
+              <li class="no"><b>Looping</b> — repeats the same action forever. Cap the steps.</li>
+              <li class="no"><b>Hallucinated actions</b> — invents a tool that doesn't exist. Validate the choice.</li>
+              <li class="no"><b>Tool misuse</b> — right tool, wrong arguments. Enforce a schema.</li>
+              <li class="no" style="padding-bottom:0"><b>Never stopping</b> — no clear finish condition. Define "done".</li>
+            </ul>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Show the loop is genuinely small. Then the failure modes — these motivate LangGraph: step caps, schema
+        validation, and explicit termination are exactly what a graph gives you for free.
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 3 notebook -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · The loop, by hand</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.25">
+            <span class="demo-eyebrow">OPEN THE NOTEBOOK</span>
+            <div style="margin-top:16px">
+              <div class="nb">
+                <div class="ic">🔁</div>
+                <div class="meta">
+                  <p class="nm">ReAct from Scratch</p>
+                  <span class="fl">Module_3_Demo_ReAct_From_Scratch.ipynb</span>
+                  <p class="ds">Build the agent loop in a raw Python <span style="font-family:var(--font-mono)">while</span> — <b>two tools</b> so the model must choose — then watch it break and add the guards.</p>
+                </div>
+                <span class="tag demo">DEMO</span>
+              </div>
+            </div>
+            <p class="body lg" style="margin:18px 0 0">
+              No framework here — we hand-build the loop Module 2 hid, so it's never a black box again.
+            </p>
+          </div>
+          <div style="flex:.85">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li>The model <b>chooses</b> between two tools by their docstrings</li>
+              <li>A multi-step question → the loop takes several turns</li>
+              <li>The <b>step cap</b> firing when steps run out</li>
+              <li>Thought → Action → Observation, in plain Python</li>
+            </ul>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Run the manual tool-calling section: show the tool_calls in the model response, execute by hand, append
+        the ToolMessage, call again. Land the point: the framework automates THIS. Bridge straight to LangGraph.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 04 — INTRODUCTION TO LANGGRAPH
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">04</div>
+        <div class="abs s-label">SECTION · BUILD</div>
+        <div class="abs s-title">Introduction to LangGraph</div>
+        <div class="abs s-desc">Model the agent loop as a state machine — nodes, edges and shared state you can control and inspect.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">The build begins. LangGraph makes the ReAct loop explicit, controllable and debuggable.</aside>
+    </section>
+
+    <!-- SLIDE — why graphs, not chains (2-col compare, fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Why a graph instead of a linear chain?</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            A chain runs A → B → C, once, forwards. Agents need to <b>branch, loop and retry</b> — that's a graph,
+            not a line.
+          </p>
+          <table class="cmp">
+            <tr><th style="width:180px">Need</th><th>Linear chain</th><th>Graph (LangGraph)</th></tr>
+            <tr><td>Branching</td><td class="lose">Fixed path only</td><td class="win">✓ Conditional edges route on state</td></tr>
+            <tr><td>Loops</td><td class="lose">No way back</td><td class="win">✓ Edges can point backwards</td></tr>
+            <tr><td>Retries</td><td class="lose">Fails the whole run</td><td class="win">✓ Route to a retry / fallback node</td></tr>
+            <tr><td>Inspecting state</td><td>Hidden between steps</td><td class="win">✓ One explicit, shared state object</td></tr>
+          </table>
+          <div class="callout good big">
+            <p class="ct">✅ The mental model</p>
+            <p class="cb">Think of your agent as a <b>state machine</b>: nodes do work, edges decide where to go next, and a single shared <b>state</b> travels through it. The ReAct loop becomes a graph you can see.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Motivate the graph abstraction against chains. Killer feature is control: conditional edges + loops + a
+        visible state object turn the opaque ReAct loop into something you can reason about.
+      </aside>
+    </section>
+
+    <!-- SLIDE — core concepts: state, nodes, edges (3 cards, fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Three primitives: State · Nodes · Edges</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:26px; display:flex; flex-direction:column">
+              <span class="pill blue" style="margin-bottom:14px; align-self:flex-start">STATE</span>
+              <p class="lead lg" style="margin:0 0 10px">The shared memory</p>
+              <p class="body lg" style="margin:0">A typed dict passed to every node. Nodes read it and return <b>updates</b> — this is how steps remember each other.</p>
+            </div>
+            <div class="card" style="padding:26px; display:flex; flex-direction:column">
+              <span class="pill orange" style="margin-bottom:14px; align-self:flex-start">NODES</span>
+              <p class="lead lg" style="margin:0 0 10px">The units of work</p>
+              <p class="body lg" style="margin:0">Plain Python functions. <b>state in → state update out.</b> Call the LLM, run a tool, transform data.</p>
+            </div>
+            <div class="card" style="padding:26px; display:flex; flex-direction:column">
+              <span class="pill teal" style="margin-bottom:14px; align-self:flex-start">EDGES</span>
+              <p class="lead lg" style="margin:0 0 10px">The wiring</p>
+              <p class="body lg" style="margin:0">Connect nodes. <b>Normal</b> edges always fire; <b>conditional</b> edges pick the next node based on the state.</p>
+            </div>
+          </div>
+          <div class="callout info big">
+            <p class="ct">🔀 Conditional edges = the agent's decisions</p>
+            <p class="cb">"Did the model ask for a tool? → go to the tools node. Otherwise → finish." That single branch, evaluated each loop, is what makes the graph <b>agentic</b> rather than a fixed pipeline.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The three nouns to internalise. State = shared typed dict, nodes return partial updates (reducers merge
+        them), edges route. Conditional edges are where "the model decides" lives — connect back to ReAct.
+      </aside>
+    </section>
+
+    <!-- SLIDE — first LangGraph agent, code (split, code fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Your first LangGraph agent</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.25">
+<pre class="code" style="margin:0; font-size:14px; line-height:1.6"><span class="kw">class</span> <span class="fn">State</span>(TypedDict):
+    messages: Annotated[list, add_messages]
+
+<span class="fn">def</span> <span class="fn">call_model</span>(state: State):
+    <span class="kw">return</span> {<span class="str">"messages"</span>: [llm_with_tools.<span class="fn">invoke</span>(state[<span class="str">"messages"</span>])]}
+
+graph = <span class="fn">StateGraph</span>(State)
+graph.<span class="fn">add_node</span>(<span class="str">"agent"</span>, call_model)
+graph.<span class="fn">add_node</span>(<span class="str">"tools"</span>, ToolNode(tools))
+
+graph.<span class="fn">add_edge</span>(START, <span class="str">"agent"</span>)
+graph.<span class="fn">add_conditional_edges</span>(<span class="str">"agent"</span>, should_continue)
+graph.<span class="fn">add_edge</span>(<span class="str">"tools"</span>, <span class="str">"agent"</span>)   <span class="com"># loop back</span>
+
+app = graph.<span class="fn">compile</span>()</pre>
+          </div>
+          <div style="flex:1">
+            <p class="kicker">READ IT AS A LOOP</p>
+            <ul class="ticks tight" style="margin-top:10px">
+              <li class="dot"><b>START → agent</b> — the model reasons over the messages</li>
+              <li class="dot"><b>should_continue</b> — tool call? → <b>tools</b>. Else → <b>END</b></li>
+              <li class="dot"><b>tools → agent</b> — feed the result back and reason again</li>
+              <li class="dot" style="padding-bottom:0"><b>add_messages</b> — the reducer that appends to state</li>
+            </ul>
+            <p class="muted" style="margin:18px 0 0; font-size:14.5px">That's the ReAct loop from Section 3 — now explicit, inspectable, and safe to extend.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The hands-on backbone. Point out the loop-back edge tools→agent — that's what makes it iterate. Map each
+        line onto Thought/Action/Observation. Everything we add later hangs off this skeleton.
+      </aside>
+    </section>
+
+    <!-- SLIDE — loops, retries & termination -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Loops, retries &amp; termination</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            A back-edge makes the graph <b>loop</b> — but a loop must be able to <b>stop</b>, and steps can
+            <b>fail</b>. All three are the same tool you already have: a <b>conditional edge</b>.
+          </p>
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">🔁 Loop</p>
+              <p class="body lg" style="margin:0">An edge that points <b>backwards</b> (<span style="font-family:var(--font-mono)">tools → agent</span>). The agent iterates until its work is done.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">🔂 Retry</p>
+              <p class="body lg" style="margin:0">On failure, route <b>back to the node</b> — or to a <b>fallback</b>. A retry is just another branch.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset">
+              <p class="lead lg" style="margin:0 0 10px">🛑 Terminate</p>
+              <p class="body lg" style="margin:0">A stop-condition edge to <span style="font-family:var(--font-mono)">END</span> — plus <span style="font-family:var(--font-mono)">recursion_limit</span> as a backstop.</p>
+            </div>
+          </div>
+          <div class="callout warn big">
+            <p class="ct">⚠️ Always have a way to stop</p>
+            <p class="cb">Your <b>stop condition</b> is how the agent <i>should</i> finish; <span style="font-family:var(--font-mono)">recursion_limit</span> catches it when it doesn't — hit the limit and LangGraph raises <span style="font-family:var(--font-mono)">GraphRecursionError</span> instead of looping (and billing) forever. This is Module 3's <span style="font-family:var(--font-mono)">max_steps</span>, now built in.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Outline point "loops, retries, and termination conditions." Loop = back-edge; retry = route to node/fallback;
+        terminate = stop-condition edge + recursion_limit backstop. Callback to M3's max_steps. The demo notebook
+        shows all three live (Examples 4 &amp; 5), incl. catching GraphRecursionError.
+      </aside>
+    </section>
+
+    <!-- SLIDE — patterns beyond the basic loop (depth from Planning Agent) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Beyond the loop: shapes a graph unlocks</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            Once the loop is a graph, you can express richer control flow than a single agent-tools cycle:
+          </p>
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">🗺️ Plan → execute</p>
+              <p class="body lg" style="margin:0">A planner node breaks a goal into steps; downstream nodes carry them out. Structure, not one big prompt.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">⚡ Fan-out with <span style="font-family:var(--font-mono); font-size:.8em">Send()</span></p>
+              <p class="body lg" style="margin:0">Map work across N parallel branches, then reduce — e.g. answer 5 sub-questions at once, compile one report.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">👁️ Visualise &amp; stream</p>
+              <p class="body lg" style="margin:0">Draw the graph to see the flow; stream node-by-node so users watch the agent think.</p>
+            </div>
+          </div>
+          <div class="callout info big">
+            <p class="ct">🧩 Same primitives, bigger structures</p>
+            <p class="cb">Planning, parallelism and streaming are all <b>just nodes and edges</b>. You don't learn new concepts — you compose the three you already have.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Straight from the planning-agent notebook: map-reduce via Send(), a plan node, graph visualization,
+        streaming. Reassure: these are compositions of state/nodes/edges, not new machinery.
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 4: demo + project exercise (the build begins) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · The build begins</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.35">
+            <span class="demo-eyebrow">OPEN THE NOTEBOOKS</span>
+            <div style="margin-top:14px">
+              <div class="nb sm">
+                <div class="ic">🧩</div>
+                <div class="meta">
+                  <p class="nm">LangGraph Basics</p>
+                  <span class="fl">Module_4_Demo_LangGraph_Basics.ipynb</span>
+                  <p class="ds">Tiny examples: state + nodes + edges, a conditional branch, and <span style="font-family:var(--font-mono)">add_messages</span>.</p>
+                </div>
+                <span class="tag demo">DEMO</span>
+              </div>
+              <div class="nb sm">
+                <div class="ic">🛠️</div>
+                <div class="meta">
+                  <p class="nm">Knowledge Assistant v1 — <b>you build it</b></p>
+                  <span class="fl">Module_4_Project_Knowledge_Assistant_v1.ipynb</span>
+                  <p class="ds">Assemble the real agent as a <span style="font-family:var(--font-mono)">StateGraph</span>. Key functions are <b>TODO</b> — you implement them.</p>
+                </div>
+                <span class="tag project">PROJECT</span>
+              </div>
+              <div class="nb sm">
+                <div class="ic">✅</div>
+                <div class="meta">
+                  <p class="nm">…v1 — Solution</p>
+                  <span class="fl">Module_4_Project_Knowledge_Assistant_v1_SOLUTION.ipynb</span>
+                  <p class="ds">The full implementation — for reference if you get stuck.</p>
+                </div>
+                <span class="tag demo">SOLUTION</span>
+              </div>
+            </div>
+          </div>
+          <div style="flex:.7">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li>The <b>compiled graph</b> — draw it, read the loop</li>
+              <li>The <span style="font-family:var(--font-mono)">tools → agent</span> edge that makes it iterate</li>
+              <li><b>State</b> accumulating via <span style="font-family:var(--font-mono)">add_messages</span></li>
+              <li>The full <b>message trace</b> end-to-end</li>
+            </ul>
+            <p class="muted" style="margin:14px 0 0; font-size:13.5px">This is <b>v1</b> of the app we grow &amp; deploy — the same loop from Module 3, now a real graph.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The project starts here. Run the demo (state/nodes/edges on tiny examples), then have learners build
+        Knowledge Assistant v1 — the fill-in cells are State, call_model, should_continue, and the graph wiring.
+        Solution notebook is the safety net. Callback to Module 3: same loop, now an explicit, controllable graph.
+      </aside>
+    </section>
+
+    <!-- SCHEMA — the assistant so far (after Module 4) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">The assistant so far &nbsp;<span style="color:var(--slate-400); font-weight:400; font-size:.6em">after Module 4 · v1</span></div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="grow" style="display:flex; align-items:center; justify-content:center">
+            <svg viewBox="0 0 1174 300" style="width:100%; max-width:1000px; height:auto" role="img"
+                 aria-label="Architecture after Module 4: a user talks to an agent that loops with a tools node — the bare LangGraph skeleton.">
+              <defs><marker id="sa4" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8A93A8"/></marker>
+                <filter id="glow4" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#2D7FF9" flood-opacity="0.5"/></filter></defs>
+              <g font-family="Arial, Helvetica, sans-serif">
+                <rect x="70" y="120" width="130" height="64" rx="12" fill="#F3F6FC" stroke="#B9C7DF" stroke-width="1.5"/>
+                <text x="135" y="150" text-anchor="middle" font-size="17" font-weight="700" fill="#0F2247">👤 User</text>
+                <text x="135" y="170" text-anchor="middle" font-size="12" fill="#7E8AA3">a question</text>
+
+                <rect x="320" y="108" width="170" height="88" rx="14" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2.5" filter="url(#glow4)"/>
+                <text x="405" y="142" text-anchor="middle" font-size="20" font-weight="700" fill="#1E5FC4">🧠 Agent</text>
+                <text x="405" y="164" text-anchor="middle" font-size="13" fill="#3A4866">LLM + reasoning</text>
+                <text x="405" y="183" text-anchor="middle" font-size="11.5" fill="#8A93A8">StateGraph loop</text>
+
+                <rect x="620" y="108" width="160" height="88" rx="14" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2.5" filter="url(#glow4)"/>
+                <text x="700" y="146" text-anchor="middle" font-size="19" font-weight="700" fill="#1E5FC4">🔧 Tools</text>
+                <text x="700" y="168" text-anchor="middle" font-size="12" fill="#8A93A8">2 starter tools</text>
+
+                <rect x="880" y="120" width="220" height="64" rx="12" fill="#F3F6FC" stroke="#B9C7DF" stroke-width="1.5"/>
+                <text x="990" y="150" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0F2247">🗂️ State · messages</text>
+                <text x="990" y="170" text-anchor="middle" font-size="11.5" fill="#7E8AA3">add_messages reducer</text>
+
+                <g stroke="#8A93A8" stroke-width="2.2" fill="none">
+                  <path d="M200 152 L316 152" marker-end="url(#sa4)"/>
+                  <path d="M490 140 L616 140" marker-end="url(#sa4)"/>
+                  <path d="M620 176 C560 216, 465 216, 460 200" marker-end="url(#sa4)"/>
+                  <path d="M780 152 L876 152" stroke-dasharray="4 4" marker-end="url(#sa4)"/>
+                </g>
+                <text x="553" y="230" text-anchor="middle" font-size="11" fill="#8A93A8" font-style="italic">loop until done</text>
+              </g>
+            </svg>
+          </div>
+          <div class="callout info big">
+            <p class="ct">🧱 The skeleton is in place</p>
+            <p class="cb">This <b>agent ⇄ tools</b> loop over shared <b>state</b> is the whole app's backbone. Every later module just adds <b>tools</b> and <b>knowledge</b> to <i>this</i> — the graph doesn't change.</p>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:30px">
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:var(--ink-600)"><span style="width:14px;height:14px;border-radius:4px;background:#EAF2FE;border:2px solid #2D7FF9"></span> <b>Module 4 · the graph (v1) — NEW</b></span>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        First "architecture so far" board — the bare skeleton (agent ⇄ tools + state). We'll colour in more each
+        module; this establishes the picture we grow.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 05 — TOOLS
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">05</div>
+        <div class="abs s-label">SECTION · BUILD</div>
+        <div class="abs s-title">Tools</div>
+        <div class="abs s-desc">The hands of the agent — how to design reliable tools and connect real external systems.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">Tools turn a talker into a doer. A model is only as capable as the tools you give it — and their design.</aside>
+    </section>
+
+    <!-- SLIDE — what tools are + how to design them (fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">A tool is a function the model can call</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            You describe a function — name, arguments, what it does — and the model decides <b>when</b> to call it and
+            with <b>what arguments</b>. The model never runs code; your runtime does, then hands back the result.
+          </p>
+          <div class="grid2" style="gap:48px">
+            <div>
+              <p class="kicker" style="color:#0E7A6E">✅ RELIABLE TOOLS ARE</p>
+              <ul class="ticks" style="margin-top:10px">
+                <li class="ok"><b>Narrow</b> — one clear job, obvious when to use</li>
+                <li class="ok"><b>Well-described</b> — the docstring <i>is</i> the interface the model reads</li>
+                <li class="ok"><b>Typed &amp; validated</b> — a schema on inputs and outputs</li>
+                <li class="ok" style="padding-bottom:0"><b>Defensive</b> — handle errors, return a useful message</li>
+              </ul>
+            </div>
+            <div>
+              <p class="kicker" style="color:#C0392B">🛑 TOOLS GO WRONG WHEN</p>
+              <ul class="ticks" style="margin-top:10px">
+                <li class="no">The name/description is vague — the model guesses</li>
+                <li class="no">They do five things — the model picks the wrong path</li>
+                <li class="no">Errors crash instead of returning text the model can read</li>
+                <li class="no" style="padding-bottom:0">Outputs are unstructured — nothing downstream can parse them</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout warn big">
+            <p class="ct">⚠️ The description is a prompt</p>
+            <p class="cb">The model chooses tools from their names and docstrings alone. Write them like instructions to a new teammate — <b>ambiguity there becomes tool misuse at runtime</b>.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Reframe: the docstring is part of the prompt. Tool design is prompt engineering. Narrow + typed + defensive
+        prevents the ReAct failure modes. This is where reliability is won or lost.
+      </aside>
+    </section>
+
+    <!-- SLIDE — python function as a tool + APIs (split, code) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">From a Python function to a tool</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.15">
+<pre class="code" style="margin:0; font-size:14.5px; line-height:1.65"><span class="kw">from</span> langchain_core.tools <span class="kw">import</span> tool
+
+<span class="com"># @tool turns a typed, documented</span>
+<span class="com"># function into a callable the LLM sees</span>
+<span class="fn">@tool</span>
+<span class="kw">def</span> <span class="fn">search_github_issues</span>(repo: str, query: str) -> str:
+    <span class="str">"""Search open issues in a GitHub repo (repo is 'owner/name')."""</span>
+    <span class="kw">return</span> gh.<span class="fn">search</span>(repo, query)   <span class="com"># your API call</span></pre>
+          </div>
+          <div style="flex:1">
+            <p class="kicker">WHAT THE MODEL RECEIVES</p>
+            <ul class="ticks tight" style="margin-top:10px">
+              <li class="dot"><b>name</b> — <span style="font-family:var(--font-mono); font-size:14px">search_github_issues</span></li>
+              <li class="dot"><b>args schema</b> — from the type hints</li>
+              <li class="dot" style="padding-bottom:0"><b>description</b> — from the docstring</li>
+            </ul>
+            <p class="kicker" style="margin-top:24px">FOR OUR ASSISTANT</p>
+            <ul class="ticks tight" style="margin-top:10px">
+              <li class="ok">Web search (Seltz)</li>
+              <li class="ok">Slack: draft a message</li>
+              <li class="ok" style="padding-bottom:0">GitHub: draft an issue</li>
+            </ul>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The @tool decorator does the heavy lifting: type hints → args schema, docstring → description. Structured
+        outputs (Pydantic) keep results parseable.
+      </aside>
+    </section>
+
+    <!-- SLIDE — reliable tools: errors, fallbacks & schemas -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Errors, fallbacks &amp; tool schemas</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.1">
+<pre class="code" style="margin:0; font-size:14px; line-height:1.6"><span class="com"># 1 · a schema pins down the arguments</span>
+<span class="kw">class</span> <span class="fn">RefundArgs</span>(BaseModel):
+    order_id: str
+    amount: float = <span class="fn">Field</span>(gt=<span class="num">0</span>)              <span class="com"># must be &gt; 0</span>
+    reason: Literal[<span class="str">"damaged"</span>, <span class="str">"late"</span>]
+
+<span class="fn">@tool</span>(args_schema=RefundArgs)
+<span class="kw">def</span> <span class="fn">issue_refund</span>(order_id, amount, reason) -> str:
+    <span class="str">"""Issue a refund for an order."""</span>
+    <span class="kw">try</span>:
+        <span class="kw">return</span> billing.<span class="fn">refund</span>(order_id, amount, reason)
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+        <span class="kw">return</span> <span class="str">f"error: {e}"</span>   <span class="com"># readable, not a crash</span></pre>
+          </div>
+          <div style="flex:1">
+            <ul class="ticks tight" style="margin:0">
+              <li class="dot"><b>Tool schema</b> — a Pydantic <span style="font-family:var(--font-mono)">args_schema</span> encodes real rules (ranges, enums). The model is <i>told</i> the constraints.</li>
+              <li class="dot"><b>Handle errors</b> — wrap the risky call; return a <b>readable string</b>, never let it raise into the loop.</li>
+              <li class="dot"><b>Fallback</b> — on failure, degrade gracefully: a cached value, a simpler tool, or "I couldn't do X, try Y".</li>
+              <li class="dot" style="padding-bottom:0"><b>Structured output</b> — a tool can return a Pydantic object, so downstream nodes get <i>fields</i>, not prose.</li>
+            </ul>
+            <div class="callout good" style="margin-top:16px">
+              <p class="ct">✅ The rule</p>
+              <p class="cb">A tool that <b>can't crash</b> and <b>can't be mis-called</b> is what keeps the agent loop alive. The model reads your error text and recovers.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Covers the two outline bullets "error handling & fallback strategies" and "structured outputs & tool
+        schemas." Schema = constraints the model must respect; try/except = readable errors not crashes; fallback =
+        degrade gracefully; structured return = parseable downstream. The demo notebook shows each live.
+      </aside>
+    </section>
+
+    <!-- SLIDE — use tools built for LLMs, not humans (Seltz) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Use tools built for LLMs, not humans</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            When you connect a tool, prefer one <b>designed for an AI to consume</b>. Web search is the clearest
+            case: a human search engine and an LLM search API return very different things.
+          </p>
+
+          <div class="grid2" style="gap:26px; align-items:stretch">
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; background:#FDF2F2; border-color:#F3B4B4">
+              <p class="lead lg" style="margin:0 0 12px">🧑 Built for humans</p>
+              <ul class="ticks tight" style="margin:0">
+                <li class="no">Ten blue links &amp; short snippets — you click through</li>
+                <li class="no">Raw HTML: nav, ads, cookie banners, clutter</li>
+                <li class="no" style="padding-bottom:0">Wastes tokens; the model must scrape &amp; guess</li>
+              </ul>
+            </div>
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset">
+              <p class="lead lg" style="margin:0 0 12px">🤖 Built for LLMs <span class="pill teal" style="vertical-align:middle; font-size:11px; padding:3px 9px">SELTZ</span></p>
+              <ul class="ticks tight" style="margin:0">
+                <li class="ok">Full, <b>clean content</b> — not snippets — ready to reason over</li>
+                <li class="ok"><b>Filtered &amp; ranked</b> for relevance, no clutter</li>
+                <li class="ok" style="padding-bottom:0">Token-efficient, with <b>sources</b> for grounding</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout good big">
+            <p class="ct">✅ Why it matters for an agent</p>
+            <p class="cb">The model can only reason over what a tool hands back. <b>Seltz</b> treats the AI as the primary consumer — clean, ranked web context instead of human-facing snippets — so the agent spends tokens <i>thinking</i>, not de-cluttering HTML. That's why our assistant's <span style="font-family:var(--font-mono)">web_search</span> wraps Seltz.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The point: pick tools whose OUTPUT is made for a model, not a person. Human search = links + snippets +
+        HTML clutter → the model wastes tokens scraping. LLM-first search (Seltz) returns clean, filtered, ranked
+        full content with sources — "AI as the primary consumer." This is why our web_search tool uses Seltz, not a
+        human SERP. Generalise: same idea applies to any tool you give an agent — shape the output for the model.
+      </aside>
+    </section>
+
+    <!-- SLIDE — connecting external APIs -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Connecting external APIs</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            A tool is just a Python function — so <b>anything with an API becomes a tool</b>. You wrap the call,
+            write a clear docstring, and handle errors. That's the whole move.
+          </p>
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">🔎 Read the world</p>
+              <p class="body lg" style="margin:0">Wrap a <b>web-search</b> API (Seltz) in a <span style="font-family:var(--font-mono)">@tool</span> — the assistant can fetch current, external facts.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">✍️ Act on the world</p>
+              <p class="body lg" style="margin:0">Draft a <b>Slack</b> message, open a <b>GitHub</b> issue. The assistant stops answering and starts <i>doing</i>.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset">
+              <p class="lead lg" style="margin:0 0 10px">🧪 Draft, don't send</p>
+              <p class="body lg" style="margin:0">Action tools return the <b>payload for review</b> first. Safe by default — a human approves before anything real happens.</p>
+            </div>
+          </div>
+          <div class="callout warn big">
+            <p class="ct">⚠️ Actions need a safety valve</p>
+            <p class="cb">A tool that <i>sends</i> or <i>deletes</i> is irreversible. Start with <b>dry-run</b> (return the draft), add a confirmation step, and only then wire the real send. Guard the risky steps.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The syllabus's "connecting external APIs" point. Web search = read; Slack/GitHub = act. Key safety idea:
+        action tools are dry-run (return the payload) so a human reviews before anything irreversible happens.
+        This is exactly what the v2 project builds.
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 5: demo + project v2 (exercise + solution) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · Real tools → v2</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.35">
+            <span class="demo-eyebrow">OPEN THE NOTEBOOKS</span>
+            <div style="margin-top:14px">
+              <div class="nb sm">
+                <div class="ic">🛠️</div>
+                <div class="meta">
+                  <p class="nm">Designing Reliable Tools</p>
+                  <span class="fl">Module_5_Demo_Designing_Reliable_Tools.ipynb</span>
+                  <p class="ds">Args schemas, validation, defensive <span style="font-family:var(--font-mono)">try/except</span>, structured output.</p>
+                </div>
+                <span class="tag demo">DEMO</span>
+              </div>
+              <div class="nb sm">
+                <div class="ic">🧩</div>
+                <div class="meta">
+                  <p class="nm">Knowledge Assistant v2 — <b>you build it</b></p>
+                  <span class="fl">Module_5_Project_Knowledge_Assistant_v2.ipynb</span>
+                  <p class="ds">Wrap <b>Seltz</b> search + draft <b>Slack</b> / <b>GitHub</b> tools. Key functions are <b>TODO</b>.</p>
+                </div>
+                <span class="tag project">PROJECT</span>
+              </div>
+              <div class="nb sm">
+                <div class="ic">✅</div>
+                <div class="meta">
+                  <p class="nm">…v2 — Solution</p>
+                  <span class="fl">Module_5_Project_Knowledge_Assistant_v2_SOLUTION.ipynb</span>
+                  <p class="ds">The full implementation, for reference.</p>
+                </div>
+                <span class="tag demo">SOLUTION</span>
+              </div>
+            </div>
+          </div>
+          <div style="flex:.7">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li>Wrapping an <b>external API</b> as a <span style="font-family:var(--font-mono)">@tool</span></li>
+              <li>Docstring + <span style="font-family:var(--font-mono)">try/except</span> = a reliable tool</li>
+              <li>The agent <b>choosing</b> search vs. an action</li>
+              <li>Draft tools returning a payload, not sending</li>
+            </ul>
+            <p class="muted" style="margin:14px 0 0; font-size:13.5px">Adding tools didn't touch the graph — same v1 loop, richer hands.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Run the demo (tool-design principles), then learners build v2: the three fill-ins are web_search (Seltz),
+        draft_slack_message, draft_github_issue. Solution is the safety net. Point: the graph is unchanged from v1.
+      </aside>
+    </section>
+
+    <!-- SCHEMA — the assistant so far (after Module 5) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">The assistant so far &nbsp;<span style="color:var(--slate-400); font-weight:400; font-size:.6em">after Module 5 · v2</span></div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="grow" style="display:flex; align-items:center; justify-content:center">
+            <svg viewBox="0 0 1174 300" style="width:100%; max-width:1080px; height:auto" role="img"
+                 aria-label="Architecture after Module 5: the agent-tools loop from Module 4, now with three real tools added — web search, Slack draft and GitHub draft.">
+              <defs><marker id="sa5" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8A93A8"/></marker>
+                <filter id="glow5" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#FE7202" flood-opacity="0.5"/></filter></defs>
+              <g font-family="Arial, Helvetica, sans-serif">
+                <rect x="20" y="120" width="120" height="60" rx="12" fill="#F3F6FC" stroke="#B9C7DF" stroke-width="1.5"/>
+                <text x="80" y="148" text-anchor="middle" font-size="16" font-weight="700" fill="#0F2247">👤 User</text>
+                <text x="80" y="167" text-anchor="middle" font-size="12" fill="#7E8AA3">a question</text>
+
+                <rect x="220" y="110" width="150" height="80" rx="14" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2.5"/>
+                <text x="295" y="142" text-anchor="middle" font-size="18" font-weight="700" fill="#1E5FC4">🧠 Agent</text>
+                <text x="295" y="163" text-anchor="middle" font-size="12" fill="#3A4866">LLM + reasoning</text>
+                <text x="295" y="180" text-anchor="middle" font-size="11" fill="#8A93A8">StateGraph loop</text>
+
+                <rect x="470" y="110" width="140" height="80" rx="14" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2.5"/>
+                <text x="540" y="146" text-anchor="middle" font-size="17" font-weight="700" fill="#1E5FC4">🔧 Tools</text>
+                <text x="540" y="166" text-anchor="middle" font-size="11" fill="#8A93A8">routes to a tool</text>
+
+                <rect x="700" y="40"  width="240" height="52" rx="10" fill="#FFF3E9" stroke="#FE7202" stroke-width="2.2" filter="url(#glow5)"/>
+                <text x="716" y="71" font-size="15" font-weight="700" fill="#C4560E">🔎 web_search · Seltz</text>
+                <rect x="700" y="102" width="240" height="52" rx="10" fill="#FFF3E9" stroke="#FE7202" stroke-width="2.2" filter="url(#glow5)"/>
+                <text x="716" y="133" font-size="15" font-weight="700" fill="#C4560E">💬 draft_slack · dry-run</text>
+                <rect x="700" y="164" width="240" height="52" rx="10" fill="#FFF3E9" stroke="#FE7202" stroke-width="2.2" filter="url(#glow5)"/>
+                <text x="716" y="195" font-size="15" font-weight="700" fill="#C4560E">🐙 draft_github · dry-run</text>
+
+                <g stroke="#8A93A8" stroke-width="2.2" fill="none">
+                  <path d="M140 150 L216 150" marker-end="url(#sa5)"/>
+                  <path d="M370 142 L466 142" marker-end="url(#sa5)"/>
+                  <path d="M470 168 C420 208, 345 208, 345 194" marker-end="url(#sa5)"/>
+                  <path d="M610 140 L696 66"  marker-end="url(#sa5)"/>
+                  <path d="M610 148 L696 128" marker-end="url(#sa5)"/>
+                  <path d="M610 158 L696 190" marker-end="url(#sa5)"/>
+                </g>
+                <text x="500" y="226" text-anchor="middle" font-size="11" fill="#8A93A8" font-style="italic">loop</text>
+              </g>
+            </svg>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:30px; flex-wrap:wrap">
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:var(--ink-600)"><span style="width:14px;height:14px;border-radius:4px;background:#EAF2FE;border:2px solid #2D7FF9"></span> Module 4 · the graph (v1)</span>
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:var(--ink-600)"><span style="width:14px;height:14px;border-radius:4px;background:#FFF3E9;border:2px solid #FE7202"></span> <b>Module 5 · real tools (v2) — NEW</b></span>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Architecture after M5: same graph, three real tools plugged in (orange, glowing = new). Reinforce: the
+        loop from M4 didn't change — we only added hands. Next module adds knowledge + memory.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 06 — KNOWLEDGE & CONTEXT LAYER
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">06</div>
+        <div class="abs s-label">SECTION · BUILD</div>
+        <div class="abs s-title">Knowledge &amp; Context Layer</div>
+        <div class="abs s-desc">RAG + context engineering + MCP — ground the model in real data and control exactly what it sees.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">The biggest section — the grounding layer. Reduces hallucination and improves relevance. Two hands-on blocks: RAG, then memory + MCP.</aside>
+    </section>
+
+    <!-- SLIDE — RAG flow (centered big, fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">RAG: give the model the right facts</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            The model can't know your internal docs. So we <b>retrieve</b> the relevant pieces at query time and
+            <b>inject</b> them into the prompt — the model answers from real, cited context.
+          </p>
+
+          <div class="flow">
+            <div class="step"><span class="no">01</span><div class="ic">🗂️</div><p class="st">Index</p><p class="sd">Chunk docs, Slack, code → embeddings in a vector store</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">02</span><div class="ic">🔎</div><p class="st">Retrieve</p><p class="sd">Embed the query, fetch the most similar chunks</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">03</span><div class="ic">📎</div><p class="st">Inject</p><p class="sd">Add retrieved text to the prompt as grounding</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">04</span><div class="ic">✅</div><p class="st">Answer</p><p class="sd">Model responds from context, with sources</p></div>
+          </div>
+
+          <div class="callout good big">
+            <p class="ct">✅ The one-liner</p>
+            <p class="cb"><b>RAG changes <i>what</i> the model knows</b> — without retraining it. Retrieval is just a tool: the agent can decide <i>when</i> to reach for internal knowledge vs. web search vs. answering directly.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        query → retrieve → inject → answer. Emphasise retrieval as a TOOL inside the agent, so routing between
+        "search internal docs" and "search the web" is a model decision — ties RAG back to the agent loop.
+      </aside>
+    </section>
+
+    <!-- SLIDE — RAG build, step by step (depth from loaders/splitters/vectors/RAG project) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Building the index: three decisions that matter</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <span class="pill blue" style="margin-bottom:12px; align-self:flex-start">1 · LOAD</span>
+              <p class="lead lg" style="margin:0 0 10px">Document loaders</p>
+              <p class="body lg" style="margin:0">PDFs, Office docs, HTML, code. Each source becomes clean <b>Documents</b> with metadata you can filter on.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <span class="pill orange" style="margin-bottom:12px; align-self:flex-start">2 · CHUNK</span>
+              <p class="lead lg" style="margin:0 0 10px">Splitters &amp; chunkers</p>
+              <p class="body lg" style="margin:0">Too big = noise; too small = lost meaning. <b>Chunk size &amp; overlap</b> are the dials that make or break retrieval.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <span class="pill teal" style="margin-bottom:12px; align-self:flex-start">3 · EMBED</span>
+              <p class="lead lg" style="margin:0 0 10px">Vector database</p>
+              <p class="body lg" style="margin:0">Embed chunks and store in <b>ChromaDB</b>. Add, update, delete, persist — retrieval by semantic similarity.</p>
+            </div>
+          </div>
+          <div class="callout warn big">
+            <p class="ct">⚠️ Retrieval quality is decided <i>before</i> the LLM</p>
+            <p class="cb">If chunking is bad, the model never sees the right context — and no prompt can fix that. <b>Most RAG failures are retrieval failures</b>, upstream of generation.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Maps to the three W2 demos (loaders / splitters / vectors) + the RAG project. The keeper line: most RAG
+        failures are retrieval failures — chunking and embedding decisions dominate final quality.
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 6a: RAG notebooks -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · Build a RAG pipeline</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.35">
+            <span class="demo-eyebrow">OPEN THE NOTEBOOKS · RAG BLOCK</span>
+            <div style="margin-top:14px">
+              <div class="nb sm">
+                <div class="ic">🔬</div>
+                <div class="meta">
+                  <p class="nm">RAG Pipeline</p>
+                  <span class="fl">Module_6_Demo_RAG_Pipeline.ipynb</span>
+                  <p class="ds">Chunk → embed (Chroma) → retrieve → <b>grounded answer with sources</b>.</p>
+                </div>
+                <span class="tag demo">DEMO</span>
+              </div>
+              <div class="nb sm">
+                <div class="ic">🧩</div>
+                <div class="meta">
+                  <p class="nm">Knowledge Assistant v3 — <b>you build it</b></p>
+                  <span class="fl">Module_6_Project_Knowledge_Assistant_v3.ipynb</span>
+                  <p class="ds">Wrap retrieval as a <span style="font-family:var(--font-mono)">@tool</span> → the agent routes internal docs vs. web. <b>TODO</b>s to fill.</p>
+                </div>
+                <span class="tag project">PROJECT</span>
+              </div>
+              <div class="nb sm">
+                <div class="ic">✅</div>
+                <div class="meta">
+                  <p class="nm">…v3 — Solution</p>
+                  <span class="fl">Module_6_Project_Knowledge_Assistant_v3_SOLUTION.ipynb</span>
+                  <p class="ds">Full implementation, for reference.</p>
+                </div>
+                <span class="tag demo">SOLUTION</span>
+              </div>
+            </div>
+          </div>
+          <div style="flex:.65">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li><b>Chunk size / overlap</b> shaping retrieval</li>
+              <li>Unknown question → "I don't know" (not a guess)</li>
+              <li>Sources cited in the answer</li>
+              <li>Retrieval as a <b>tool</b> → agent routes docs vs. web</li>
+            </ul>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        RAG block. Run the demo (chunk→embed→retrieve→grounded answer; note the "doesn't know" case kills
+        hallucination). Then learners build v3: wrap retrieval as a tool so the agent routes internal docs vs. web.
+        Solution is the safety net.
+      </aside>
+    </section>
+
+    <!-- SLIDE — context engineering (fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Context engineering: what goes in the window</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.05">
+            <p class="body lg" style="margin:0 0 18px">
+              The prompt the model actually sees is <b>assembled</b> from many parts. Designing that assembly — what
+              to include, in what order, and what to leave out — is context engineering.
+            </p>
+            <ul class="ticks" style="margin:0">
+              <li class="dot"><b>System instructions</b> — role, rules, output format</li>
+              <li class="dot"><b>User input</b> — the current question</li>
+              <li class="dot"><b>History</b> — relevant prior turns, trimmed</li>
+              <li class="dot"><b>Retrieved data</b> — RAG chunks, tool outputs</li>
+              <li class="dot" style="padding-bottom:0"><b>State</b> — passed cleanly through LangGraph</li>
+            </ul>
+          </div>
+          <div style="flex:.95">
+            <div class="callout warn big">
+              <p class="ct">⚠️ More context ≠ better</p>
+              <p class="cb">A stuffed window adds cost, latency and <b>noise</b> — the model loses the signal. Curate ruthlessly: include what's relevant, drop the rest.</p>
+            </div>
+            <div class="callout info big" style="margin-top:18px">
+              <p class="ct">🧭 The goal</p>
+              <p class="cb">Give the model <b>exactly</b> what it needs to answer well — no more. Context is a budget, not a bucket.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Context is a budget, not a bucket. Control prompt size, order, and relevance. LangGraph state is where you
+        manage this cleanly. Bridge into memory (persistent context) next.
+      </aside>
+    </section>
+
+    <!-- SLIDE — memory: short vs long term (depth from memory notebook) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Memory: short-term vs long-term</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            Our assistant still <b>forgets</b> between turns (the third wall from Module 2). Memory is just
+            <b>context you persist</b> — and LangGraph makes the short-term kind almost free.
+          </p>
+          <div class="grid2" style="gap:26px; align-items:stretch">
+            <div class="card" style="padding:24px; display:flex; flex-direction:column; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset">
+              <span class="pill teal" style="margin-bottom:12px; align-self:flex-start">SHORT-TERM · WE BUILD THIS</span>
+              <p class="lead lg" style="margin:0 0 10px">Within a conversation</p>
+              <p class="body lg" style="margin:0 0 12px">Compile with a <b>checkpointer</b> and pass a <b>thread_id</b> — LangGraph saves &amp; reloads the history per thread.</p>
+<pre class="code" style="margin:0; font-size:13px; line-height:1.5">app = builder.<span class="fn">compile</span>(checkpointer=InMemorySaver())
+app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>: {<span class="str">"thread_id"</span>: <span class="str">"user-1"</span>}})</pre>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <span class="pill" style="margin-bottom:12px; align-self:flex-start">LONG-TERM · CONCEPT</span>
+              <p class="lead lg" style="margin:0 0 10px">Across sessions &amp; users</p>
+              <p class="body lg" style="margin:0">Durable facts written to a <b>store</b> — preferences, past chats — recalled in future sessions. Makes the assistant <i>adaptive</i>. (Beyond today's build.)</p>
+            </div>
+          </div>
+          <div class="callout good big">
+            <p class="ct">🧵 Same thread remembers, new thread is fresh</p>
+            <p class="cb">A <b>thread_id</b> is one conversation. Same id → the assistant recalls earlier turns; a new id → a clean session. That's exactly how the <b>Streamlit chat</b> (Module 8) will keep each user's conversation going.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        From the multi-user memory notebook: short-term = checkpointer + thread_id; long-term = a store (LangMem)
+        for durable per-user facts. Frame memory as persisted context — continuous with the previous slide.
+      </aside>
+    </section>
+
+    <!-- SLIDE — MCP (fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">MCP: a standard plug for tools &amp; data</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            The <b>Model Context Protocol</b> is a common interface between agents and external systems. Instead of
+            hand-wiring every integration, an agent speaks one protocol to many <b>MCP servers</b>.
+          </p>
+
+          <div style="display:flex; align-items:center; justify-content:center; gap:0">
+            <div class="card" style="padding:22px 30px; text-align:center; border-color:var(--orange); box-shadow:0 0 0 2px var(--orange) inset">
+              <div style="font-size:32px">🤖</div><p class="lead" style="margin:8px 0 0; font-size:18px">Your agent</p><p class="muted" style="margin:4px 0 0; font-size:13px">MCP client</p>
+            </div>
+            <div style="font-size:26px; color:var(--orange); font-weight:700; padding:0 22px">⇄</div>
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <div class="card" style="padding:12px 22px; text-align:center">📁 &nbsp;Docs / filesystem server</div>
+              <div class="card" style="padding:12px 22px; text-align:center">💬 &nbsp;Slack server</div>
+              <div class="card" style="padding:12px 22px; text-align:center">🐙 &nbsp;GitHub server</div>
+            </div>
+          </div>
+
+          <div class="grid2" style="gap:26px; align-items:stretch">
+            <div class="callout good">
+              <p class="ct">✅ Use existing servers</p>
+              <p class="cb">Plug into ready-made MCP servers — no bespoke glue for every API.</p>
+            </div>
+            <div class="callout info">
+              <p class="ct">🔧 Or expose your own</p>
+              <p class="cb">Wrap a simple internal API as an MCP server → modular, reusable, scalable architectures.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        MCP = USB-C for agents: one protocol, many servers. Use pre-built servers, or wrap your own API. Keeps the
+        architecture modular so adding a new data source doesn't mean rewriting the agent.
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 6b: MCP -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · MCP servers</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.25">
+            <span class="demo-eyebrow">OPEN THE NOTEBOOK</span>
+            <div style="margin-top:16px">
+              <div class="nb">
+                <div class="ic">🔌</div>
+                <div class="meta">
+                  <p class="nm">MCP Servers</p>
+                  <span class="fl">Module_6_Demo_MCP_Servers.ipynb</span>
+                  <p class="ds"><b>Expose your own</b> MCP server with <span style="font-family:var(--font-mono)">FastMCP</span>, <b>connect</b> to it with <span style="font-family:var(--font-mono)">langchain-mcp-adapters</span>, then hand its tools to an agent.</p>
+                </div>
+                <span class="tag demo">DEMO</span>
+              </div>
+            </div>
+            <p class="body lg" style="margin:18px 0 0">
+              A tiny local <span style="font-family:var(--font-mono)">stdio</span> server — no hosting, no network. To the agent, MCP tools are just tools.
+            </p>
+          </div>
+          <div style="flex:.85">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li>A server defined in <b>~6 lines</b> (FastMCP)</li>
+              <li>Its functions loaded as <b>LangChain tools</b></li>
+              <li>One client, <b>many servers</b> possible</li>
+              <li>The agent using them like any other tool</li>
+            </ul>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        MCP hands-on. Write a FastMCP stdio server, connect via MultiServerMCPClient, give its tools to create_agent.
+        Point: MCP tools are just tools — connect existing servers or expose your own. Self-contained, no network.
+      </aside>
+    </section>
+
+    <!-- SCHEMA — the assistant so far (after Module 6) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">The assistant so far &nbsp;<span style="color:var(--slate-400); font-weight:400; font-size:.6em">after Module 6 · v3.1</span></div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="grow" style="display:flex; align-items:center; justify-content:center">
+            <svg viewBox="0 0 1174 360" style="width:100%; max-width:1174px; height:auto" role="img"
+                 aria-label="Architecture of the Knowledge Assistant after Module 6: user talks to an agent that loops with a tools node; tools include web search, Slack and GitHub drafts (added in Module 5), and a company-docs retriever over a vector store plus short-term memory (added in Module 6).">
+              <defs>
+                <marker id="sa" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8A93A8"/></marker>
+                <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#12A594" flood-opacity="0.5"/></filter>
+              </defs>
+              <g font-family="Arial, Helvetica, sans-serif">
+                <!-- USER -->
+                <rect x="20" y="150" width="120" height="60" rx="12" fill="#F3F6FC" stroke="#B9C7DF" stroke-width="1.5"/>
+                <text x="80" y="178" text-anchor="middle" font-size="16" font-weight="700" fill="#0F2247">👤 User</text>
+                <text x="80" y="197" text-anchor="middle" font-size="12" fill="#7E8AA3">a question</text>
+
+                <!-- AGENT (M4) -->
+                <rect x="220" y="140" width="150" height="80" rx="14" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2.5"/>
+                <text x="295" y="170" text-anchor="middle" font-size="18" font-weight="700" fill="#1E5FC4">🧠 Agent</text>
+                <text x="295" y="190" text-anchor="middle" font-size="12" fill="#3A4866">LLM + reasoning</text>
+                <text x="295" y="207" text-anchor="middle" font-size="11" fill="#8A93A8">StateGraph loop</text>
+
+                <!-- TOOLS node (M4) -->
+                <rect x="470" y="140" width="140" height="80" rx="14" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2.5"/>
+                <text x="540" y="176" text-anchor="middle" font-size="17" font-weight="700" fill="#1E5FC4">🔧 Tools</text>
+                <text x="540" y="196" text-anchor="middle" font-size="11" fill="#8A93A8">routes to a tool</text>
+
+                <!-- tool cards, right column -->
+                <!-- M5 tools (orange) -->
+                <rect x="690" y="20"  width="210" height="46" rx="10" fill="#FFF3E9" stroke="#FE7202" stroke-width="1.8"/>
+                <text x="705" y="48" font-size="14.5" font-weight="700" fill="#C4560E">🔎 web_search · Seltz</text>
+                <rect x="690" y="74" width="210" height="46" rx="10" fill="#FFF3E9" stroke="#FE7202" stroke-width="1.8"/>
+                <text x="705" y="102" font-size="14.5" font-weight="700" fill="#C4560E">💬 draft_slack</text>
+                <rect x="690" y="128" width="210" height="46" rx="10" fill="#FFF3E9" stroke="#FE7202" stroke-width="1.8"/>
+                <text x="705" y="156" font-size="14.5" font-weight="700" fill="#C4560E">🐙 draft_github</text>
+
+                <!-- M6 tool (teal, NEW, glowing) -->
+                <rect x="690" y="188" width="210" height="60" rx="10" fill="#E9F8F4" stroke="#12A594" stroke-width="2.5" filter="url(#glow)"/>
+                <text x="705" y="214" font-size="14.5" font-weight="700" fill="#0E7A6E">📚 search_company_docs</text>
+                <text x="705" y="234" font-size="11.5" fill="#0E7A6E">RAG over internal docs</text>
+
+                <!-- vector store (M6) -->
+                <rect x="960" y="190" width="150" height="56" rx="10" fill="#E9F8F4" stroke="#12A594" stroke-width="2"/>
+                <text x="1035" y="214" text-anchor="middle" font-size="14" font-weight="700" fill="#0E7A6E">🗄️ Vector store</text>
+                <text x="1035" y="232" text-anchor="middle" font-size="11" fill="#0E7A6E">Chroma embeddings</text>
+
+                <!-- memory (M6) under agent -->
+                <rect x="220" y="270" width="150" height="56" rx="10" fill="#E9F8F4" stroke="#12A594" stroke-width="2.5" filter="url(#glow)"/>
+                <text x="295" y="294" text-anchor="middle" font-size="14" font-weight="700" fill="#0E7A6E">🧵 Memory</text>
+                <text x="295" y="312" text-anchor="middle" font-size="11" fill="#0E7A6E">checkpointer · thread_id</text>
+
+                <!-- arrows -->
+                <g stroke="#8A93A8" stroke-width="2.2" fill="none">
+                  <path d="M140 180 L216 180" marker-end="url(#sa)"/>
+                  <path d="M370 172 L466 172" marker-end="url(#sa)"/>            <!-- agent->tools -->
+                  <path d="M470 200 C420 240, 345 240, 345 224" marker-end="url(#sa)"/>  <!-- tools->agent loop back -->
+                  <path d="M610 165 L686 43"  marker-end="url(#sa)"/>
+                  <path d="M610 172 L686 97"  marker-end="url(#sa)"/>
+                  <path d="M610 180 L686 151" marker-end="url(#sa)"/>
+                  <path d="M610 195 L686 214" marker-end="url(#sa)"/>
+                  <path d="M900 218 L956 218" marker-end="url(#sa)"/>          <!-- docs->vectorstore -->
+                  <path d="M295 270 L295 224" stroke-dasharray="4 4"/>          <!-- agent<->memory -->
+                </g>
+                <text x="500" y="256" text-anchor="middle" font-size="11" fill="#8A93A8" font-style="italic">loop</text>
+              </g>
+            </svg>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:center; gap:30px; flex-wrap:wrap">
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:var(--ink-600)"><span style="width:14px;height:14px;border-radius:4px;background:#EAF2FE;border:2px solid #2D7FF9"></span> Module 4 · the graph (v1)</span>
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:var(--ink-600)"><span style="width:14px;height:14px;border-radius:4px;background:#FFF3E9;border:2px solid #FE7202"></span> Module 5 · real tools (v2)</span>
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:var(--ink-600)"><span style="width:14px;height:14px;border-radius:4px;background:#E9F8F4;border:2px solid #12A594"></span> <b>Module 6 · knowledge + memory (v3.1) — NEW</b></span>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The running "architecture so far" board. Each module colours in what it added: M4 the agent-tools graph,
+        M5 the real tools, M6 (highlighted, glowing teal) the RAG retriever + vector store + short-term memory.
+        We revisit this after every module that touches the app, so by Module 9 the whole picture is filled in.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 07 — MULTI-AGENT SYSTEMS
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">07</div>
+        <div class="abs s-label">SECTION · BUILD</div>
+        <div class="abs s-title">Multi-Agent Systems</div>
+        <div class="abs s-desc">When one agent isn't enough — split responsibilities, and weigh clarity against complexity.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">Scaling the design. Multiple focused agents can beat one overloaded one — but only when the split is real.</aside>
+    </section>
+
+    <!-- SLIDE — when one agent isn't enough + patterns (fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Split the work across specialised agents</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            When one agent juggles too many tools and goals, it gets confused. Splitting responsibilities gives each
+            agent a <b>narrow prompt, few tools, one job</b> — easier to steer and debug. Common patterns:
+          </p>
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:26px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">🧭 Planner / Executor</p>
+              <p class="body lg" style="margin:0">One agent breaks the goal into steps; another carries each out.</p>
+            </div>
+            <div class="card" style="padding:26px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">🔎 Retriever / Analyzer</p>
+              <p class="body lg" style="margin:0">One gathers the evidence; another reasons over it to answer.</p>
+            </div>
+            <div class="card" style="padding:26px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">✍️ Generator / Reviewer</p>
+              <p class="body lg" style="margin:0">One drafts; another critiques and approves before it ships.</p>
+            </div>
+          </div>
+          <p class="muted" style="margin:0; font-size:15px">In LangGraph each agent is a <b>subgraph</b> — a node that is itself a graph. Coordination is just more edges.</p>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Three canonical splits. In LangGraph each agent is a subgraph/node; a supervisor routes between them.
+        Narrow agents are more reliable than one omniscient agent.
+      </aside>
+    </section>
+
+    <!-- SLIDE — supervisor vs swarm (depth from projects 8 & 9) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Two topologies: Supervisor vs Swarm</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            Once you have multiple agents, how do they hand off control? Two common shapes:
+          </p>
+          <table class="cmp">
+            <tr><th style="width:180px">Aspect</th><th>🧭 Supervisor</th><th>🐝 Swarm</th></tr>
+            <tr><td>Control</td><td><b>Centralised</b> — a router agent delegates</td><td><b>Decentralised</b> — agents hand off peer-to-peer</td></tr>
+            <tr><td>Routing</td><td>Supervisor decides who acts next</td><td>Each agent decides when to pass control</td></tr>
+            <tr><td>Best for</td><td class="win">Clear task decomposition, auditability</td><td class="win">Fluid, exploratory collaboration</td></tr>
+            <tr><td>Watch out</td><td>Supervisor is a bottleneck</td><td>Harder to trace &amp; contain</td></tr>
+          </table>
+          <div class="callout info big">
+            <p class="ct">🧭 How to choose</p>
+            <p class="cb">Start with a <b>supervisor</b> — it's easier to reason about and debug. Reach for a <b>swarm</b> only when hand-offs are genuinely dynamic and a central router gets in the way.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Directly from projects 8 & 9 (supervisor vs swarm on utilization review). Recommend supervisor by default;
+        swarm when hand-offs are dynamic. Ties to the "least complexity that works" theme.
+      </aside>
+    </section>
+
+    <!-- SLIDE — coordination + trade-offs (fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Coordination — and the honest trade-off</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.05">
+            <p class="kicker">HOW THEY TALK</p>
+            <ul class="ticks" style="margin:10px 0 0">
+              <li class="dot"><b>Shared state</b> — agents read/write the same graph state</li>
+              <li class="dot"><b>A supervisor</b> — a router agent decides who acts next</li>
+              <li class="dot"><b>Handoffs</b> — one agent passes control (and context) to another</li>
+              <li class="dot" style="padding-bottom:0"><b>Structured messages</b> — clear contracts between them</li>
+            </ul>
+          </div>
+          <div style="flex:.95">
+            <div class="callout warn big">
+              <p class="ct">⚖️ Complexity vs clarity</p>
+              <p class="cb">More agents = more moving parts, more latency, more ways to fail. Only split when a single agent genuinely <b>can't hold the job</b>.</p>
+            </div>
+            <div class="callout good big" style="margin-top:18px">
+              <p class="ct">✅ Start simple</p>
+              <p class="cb">One good agent beats a tangle of mediocre ones. Grow into multi-agent when the task demands it — not before.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Coordination via shared state + supervisor/router + handoffs. Sober warning: multi-agent multiplies failure
+        surface and latency. Default to one agent; split only under real pressure. Callback to "least autonomy".
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 7 notebooks -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · Single vs multi-agent</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.25">
+            <span class="demo-eyebrow">OPEN THE NOTEBOOK</span>
+            <div style="margin-top:16px">
+              <div class="nb">
+                <div class="ic">🧭</div>
+                <div class="meta">
+                  <p class="nm">Multi-Agent · Supervisor</p>
+                  <span class="fl">Module_7_Demo_Multi_Agent_Supervisor.ipynb</span>
+                  <p class="ds">A <b>supervisor</b> routes to two specialists — a <b>researcher</b> (web) and a <b>docs expert</b> (internal) — who report back until the task is done.</p>
+                </div>
+                <span class="tag demo">DEMO</span>
+              </div>
+            </div>
+            <p class="body lg" style="margin:18px 0 0">
+              Standalone demo — our assistant stays a <b>single</b> agent. Swarm (peer-to-peer hand-off) is covered on the previous slide.
+            </p>
+          </div>
+          <div style="flex:.85">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li>The supervisor <b>routing</b> to the right specialist</li>
+              <li>Each specialist has <b>one job, one tool</b></li>
+              <li>Specialists <b>report back</b> to the supervisor</li>
+              <li>When the extra complexity is (and isn't) worth it</li>
+            </ul>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Run the supervisor demo: watch it route an internal question to docs_expert and an external one to
+        researcher, then report back. Reinforce: this is standalone — our Knowledge Assistant stays single-agent
+        because one agent handles it well. Swarm is slide-only (conceptual contrast).
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 08 — STREAMLIT INTERFACE
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">08</div>
+        <div class="abs s-label">SECTION · SHIP</div>
+        <div class="abs s-title">Streamlit Interface</div>
+        <div class="abs s-desc">Turn the backend into something people can actually use — a chat UI with session state.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">From logic to product. A tiny amount of Streamlit turns our graph into a usable chat app.</aside>
+    </section>
+
+    <!-- SLIDE — streamlit chat UI, code + points (split, code fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">A chat UI in a handful of lines</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.2">
+<pre class="code" style="margin:0; font-size:13.5px; line-height:1.55"><span class="kw">import</span> streamlit <span class="kw">as</span> st
+<span class="kw">from</span> assistant <span class="kw">import</span> build_assistant   <span class="com"># our v3.1 graph</span>
+
+<span class="com"># build once; one thread_id per session = memory</span>
+<span class="kw">if</span> <span class="str">"agent"</span> <span class="kw">not in</span> st.session_state:
+    st.session_state.agent = <span class="fn">build_assistant</span>()
+    st.session_state.tid = <span class="fn">str</span>(uuid.<span class="fn">uuid4</span>())
+
+<span class="kw">for</span> role, text <span class="kw">in</span> st.session_state.history:
+    st.<span class="fn">chat_message</span>(role).<span class="fn">write</span>(text)
+
+<span class="kw">if</span> prompt := st.<span class="fn">chat_input</span>(<span class="str">"Ask…"</span>):
+    st.<span class="fn">chat_message</span>(<span class="str">"user"</span>).<span class="fn">write</span>(prompt)
+    cfg = {<span class="str">"configurable"</span>: {<span class="str">"thread_id"</span>: st.session_state.tid}}
+    ans = st.session_state.agent.<span class="fn">invoke</span>({<span class="str">"messages"</span>:[(<span class="str">"user"</span>,prompt)]}, cfg)
+    st.<span class="fn">chat_message</span>(<span class="str">"assistant"</span>).<span class="fn">write</span>(ans[<span class="str">"messages"</span>][-<span class="num">1</span>].content)</pre>
+          </div>
+          <div style="flex:1">
+            <p class="kicker">THE ESSENTIALS</p>
+            <ul class="ticks tight" style="margin-top:10px">
+              <li class="dot"><b>chat_input / chat_message</b> — the whole UI</li>
+              <li class="dot"><b>session_state</b> — survives Streamlit's rerun-on-every-keystroke</li>
+              <li class="dot"><b>thread_id</b> — per session → the memory from Module 6</li>
+              <li class="dot" style="padding-bottom:0">the UI just <b>invokes the graph</b> — all logic lives in <span style="font-family:var(--font-mono)">assistant.py</span></li>
+            </ul>
+            <p class="muted" style="margin:18px 0 0; font-size:14.5px">The graph is imported, not rebuilt — same code the deploy step (Module 9) ships.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Streamlit is deliberately minimal. Key gotcha: it reruns top-to-bottom on every interaction, so
+        conversation lives in session_state. The UI is thin — it just invokes the graph and renders results.
+      </aside>
+    </section>
+
+    <!-- SLIDE — AI UX: show the work -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Good AI UX: show the work</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            An agent can take seconds and use several tools. A blank spinner feels broken. A few small touches
+            make it feel trustworthy — and they're the outline's <i>"display structured outputs &amp; tool results."</i>
+          </p>
+          <div class="grid3" style="align-items:stretch">
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">⏳ Stream, don't stall</p>
+              <p class="body lg" style="margin:0"><span style="font-family:var(--font-mono)">.stream()</span> the graph and render as it goes, so the user sees progress instead of a frozen screen.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">🔧 Show what it did</p>
+              <p class="body lg" style="margin:0">Surface the <b>tools used</b> and <b>sources cited</b> — "used: search_company_docs". Turns a black box into something you trust.</p>
+            </div>
+            <div class="card" style="padding:24px; display:flex; flex-direction:column">
+              <p class="lead lg" style="margin:0 0 10px">📋 Render structure</p>
+              <p class="body lg" style="margin:0">Structured tool output? Show it as a table / card, not a JSON blob. Match the display to the data.</p>
+            </div>
+          </div>
+          <div class="callout good big">
+            <p class="ct">✅ The principle</p>
+            <p class="cb">An agent is non-deterministic and slow-ish — so <b>make its work visible</b>. Progress, tools, and sources on screen are what separate a demo from something people actually rely on.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Covers "displaying structured outputs & tool results" and "basic UX for AI apps." Three moves: stream so it
+        doesn't feel frozen; show tools/sources (our app.py prints "used: ..."); render structured data as tables/
+        cards. Principle: agents are slow &amp; non-deterministic, so surface the work to build trust.
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 8 (live build) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · Wrap the assistant in a UI</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.25">
+            <span class="demo-eyebrow">RUN LOCALLY</span>
+            <div style="margin-top:16px">
+              <div class="nb sm">
+                <div class="ic">🧠</div>
+                <div class="meta">
+                  <p class="nm">assistant.py</p>
+                  <span class="fl">src/app/assistant.py</span>
+                  <p class="ds">The v3.1 graph (tools + RAG + memory), extracted from the notebook into reusable code.</p>
+                </div>
+                <span class="tag demo">MODULE</span>
+              </div>
+              <div class="nb sm">
+                <div class="ic">💬</div>
+                <div class="meta">
+                  <p class="nm">app.py — the chat UI</p>
+                  <span class="fl">uv run streamlit run app/app.py</span>
+                  <p class="ds"><span style="font-family:var(--font-mono)">chat_input</span> → imports &amp; invokes the graph → renders the reply, with tools used shown.</p>
+                </div>
+                <span class="tag project">LIVE</span>
+              </div>
+            </div>
+            <p class="body lg" style="margin:16px 0 0">
+              We leave Colab — this runs on <span style="font-family:var(--font-mono)">localhost</span>, the same files Module 9 deploys.
+            </p>
+          </div>
+          <div style="flex:.75">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li>Graph logic in <span style="font-family:var(--font-mono)">assistant.py</span>, UI in <span style="font-family:var(--font-mono)">app.py</span></li>
+              <li>Conversation in <b>session_state</b></li>
+              <li><b>thread_id</b> → it remembers within the chat</li>
+              <li>The tools it used, surfaced in the UI</li>
+            </ul>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Leave Colab — Streamlit runs locally. Show the two files: assistant.py (the graph, reused) and app.py (the
+        UI). Run `uv run streamlit run app/app.py`, chat with the assistant we built all day, point out memory
+        (ask a follow-up) and the "used: ..." caption. These exact files get deployed in Module 9.
+      </aside>
+    </section>
+
+    <!-- SCHEMA — the assistant so far (after Module 8) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">The assistant so far &nbsp;<span style="color:var(--slate-400); font-weight:400; font-size:.6em">after Module 8 · now with a UI</span></div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="grow" style="display:flex; align-items:center; justify-content:center">
+            <svg viewBox="0 0 1174 340" style="width:100%; max-width:1120px; height:auto" role="img"
+                 aria-label="Architecture after Module 8: a Streamlit chat UI wraps the whole v3.1 assistant (agent, tools, RAG, memory) — the UI just invokes the graph.">
+              <defs><marker id="sa8" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8A93A8"/></marker>
+                <filter id="glow8" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#2D7FF9" flood-opacity="0.45"/></filter></defs>
+              <g font-family="Arial, Helvetica, sans-serif">
+                <!-- Streamlit UI wrapper (M8, NEW blue, glowing) -->
+                <rect x="30" y="30" width="1114" height="280" rx="18" fill="#F5FAFF" stroke="#2D7FF9" stroke-width="2.5" stroke-dasharray="8 5" filter="url(#glow8)"/>
+                <text x="52" y="60" font-size="16" font-weight="700" fill="#1E5FC4">💬 Streamlit chat UI · app.py</text>
+                <text x="52" y="80" font-size="12" fill="#8A93A8">sidebar toggles MCP departments · session_state · thread_id</text>
+
+                <!-- inner: the v3.1 assistant (unchanged) -->
+                <rect x="60" y="100" width="150" height="70" rx="12" fill="#F3F6FC" stroke="#B9C7DF" stroke-width="1.5"/>
+                <text x="135" y="132" text-anchor="middle" font-size="15" font-weight="700" fill="#0F2247">👤 User</text>
+                <text x="135" y="151" text-anchor="middle" font-size="11" fill="#7E8AA3">chat box</text>
+
+                <rect x="250" y="96" width="140" height="78" rx="12" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2"/>
+                <text x="320" y="128" text-anchor="middle" font-size="16" font-weight="700" fill="#1E5FC4">🧠 Agent</text>
+                <text x="320" y="150" text-anchor="middle" font-size="11" fill="#8A93A8">assistant.py graph</text>
+
+                <rect x="430" y="96" width="120" height="78" rx="12" fill="#EAF2FE" stroke="#2D7FF9" stroke-width="2"/>
+                <text x="490" y="132" text-anchor="middle" font-size="15" font-weight="700" fill="#1E5FC4">🔧 Tools</text>
+
+                <!-- tools -->
+                <rect x="600" y="70"  width="200" height="34" rx="8" fill="#FFF3E9" stroke="#FE7202" stroke-width="1.6"/>
+                <text x="614" y="92" font-size="12.5" font-weight="700" fill="#C4560E">🔎 web_search · Seltz</text>
+                <rect x="600" y="112" width="200" height="34" rx="8" fill="#FFF3E9" stroke="#FE7202" stroke-width="1.6"/>
+                <text x="614" y="134" font-size="12.5" font-weight="700" fill="#C4560E">💬 draft_slack / 🐙 github</text>
+                <rect x="600" y="154" width="200" height="34" rx="8" fill="#E9F8F4" stroke="#12A594" stroke-width="1.8"/>
+                <text x="614" y="176" font-size="12.5" font-weight="700" fill="#0E7A6E">📚 search_company_docs</text>
+                <rect x="600" y="196" width="200" height="34" rx="8" fill="#F5FAFF" stroke="#2D7FF9" stroke-width="1.8" stroke-dasharray="5 3"/>
+                <text x="614" y="218" font-size="12.5" font-weight="700" fill="#1E5FC4">🔌 MCP: HR · Finance …</text>
+
+                <!-- vector store + memory -->
+                <rect x="850" y="112" width="140" height="34" rx="8" fill="#E9F8F4" stroke="#12A594" stroke-width="1.8"/>
+                <text x="920" y="134" text-anchor="middle" font-size="12" font-weight="700" fill="#0E7A6E">🗄️ Vector store</text>
+                <rect x="850" y="196" width="180" height="34" rx="8" fill="#F5FAFF" stroke="#2D7FF9" stroke-width="1.6" stroke-dasharray="5 3"/>
+                <text x="940" y="218" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E5FC4">department servers</text>
+                <rect x="250" y="220" width="140" height="52" rx="10" fill="#E9F8F4" stroke="#12A594" stroke-width="2"/>
+                <text x="320" y="243" text-anchor="middle" font-size="13" font-weight="700" fill="#0E7A6E">🧵 Memory</text>
+                <text x="320" y="260" text-anchor="middle" font-size="10.5" fill="#0E7A6E">checkpointer · thread_id</text>
+
+                <g stroke="#8A93A8" stroke-width="2" fill="none">
+                  <path d="M210 135 L246 135" marker-end="url(#sa8)"/>
+                  <path d="M390 130 L426 130" marker-end="url(#sa8)"/>
+                  <path d="M430 155 C385 190, 345 190, 340 174" marker-end="url(#sa8)"/>
+                  <path d="M550 128 L596 87"  marker-end="url(#sa8)"/>
+                  <path d="M550 133 L596 128" marker-end="url(#sa8)"/>
+                  <path d="M550 148 L596 168" marker-end="url(#sa8)"/>
+                  <path d="M550 158 L596 210" marker-end="url(#sa8)"/>
+                  <path d="M800 171 L846 145" marker-end="url(#sa8)"/>
+                  <path d="M800 213 L846 213" marker-end="url(#sa8)"/>
+                  <path d="M320 220 L320 176" stroke-dasharray="4 4"/>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:26px; flex-wrap:wrap">
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-600)"><span style="width:13px;height:13px;border-radius:4px;background:#EAF2FE;border:2px solid #2D7FF9"></span> M4 graph</span>
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-600)"><span style="width:13px;height:13px;border-radius:4px;background:#FFF3E9;border:2px solid #FE7202"></span> M5 tools</span>
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-600)"><span style="width:13px;height:13px;border-radius:4px;background:#E9F8F4;border:2px solid #12A594"></span> M6 knowledge + memory</span>
+            <span style="display:inline-flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-600)"><span style="width:13px;height:13px;border-radius:4px;background:#F5FAFF;border:2px dashed #2D7FF9"></span> <b>M8 UI + toggleable MCP — NEW</b></span>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        "So far" board after M8: the whole v3.1 assistant is now wrapped in a Streamlit UI (dashed blue box, new).
+        Nothing inside changed — the UI just invokes the graph. Only deployment (M9) is left to fill in.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SECTION 09 — DEPLOYMENT
+         ============================================================ -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs s-number">09</div>
+        <div class="abs s-label">SECTION · SHIP</div>
+        <div class="abs s-title">Deployment &amp; monitoring</div>
+        <div class="abs s-desc">Package it, manage secrets, ship it live — then watch it with tracing &amp; evaluation.</div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">The finish line. From "works on my laptop" to "live on the internet" — plus how to know it keeps working.</aside>
+    </section>
+
+    <!-- SLIDE — deployment flow (picture flow, fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">From laptop to live in four steps</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            Deployment is mostly discipline, not magic. Pin what you depend on, keep secrets out of code, push,
+            and test the running app.
+          </p>
+
+          <div class="flow">
+            <div class="step"><span class="no">01</span><div class="ic">📦</div><p class="st">Package</p><p class="sd">Deps in <span style="font-family:var(--font-mono);font-size:13px">requirements.txt</span> + a <span style="font-family:var(--font-mono);font-size:13px">render.yaml</span> blueprint</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">02</span><div class="ic">🔗</div><p class="st">Connect repo</p><p class="sd">Render reads <span style="font-family:var(--font-mono);font-size:13px">render.yaml</span> &amp; provisions the service</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">03</span><div class="ic">🔑</div><p class="st">Set secrets</p><p class="sd">API keys as <b>env vars</b> in the dashboard</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">04</span><div class="ic">🚀</div><p class="st">Push = deploy</p><p class="sd">Every <span style="font-family:var(--font-mono);font-size:13px">git push</span> auto-redeploys · live URL</p></div>
+          </div>
+
+          <div class="grid2" style="gap:24px; align-items:stretch">
+            <div class="callout good">
+              <p class="ct">✅ The blueprint = infra as code</p>
+              <p class="cb"><span style="font-family:var(--font-mono)">render.yaml</span> in the repo declares the build &amp; start commands and env vars. Connect the repo once — pushes deploy themselves.</p>
+            </div>
+            <div class="callout warn">
+              <p class="ct">⚠️ What bites on the free tier</p>
+              <p class="cb"><b>Cold starts</b> (~30-60s to wake), <b>ephemeral disk</b> (re-embeds once per deploy), and the classic <b>missing env var</b>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Package → connect repo → secrets → push-deploys. The star is the render.yaml blueprint: infra-as-code in the
+        repo, connect once, every git push redeploys. Warn about free-tier cold starts, ephemeral disk (Chroma
+        re-embeds once per deploy — that's why we persist), and the forgot-the-env-var classic.
+      </aside>
+    </section>
+
+    <!-- SLIDE — why monitor an agent (the concept) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Why an agent needs monitoring</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            A normal app is <b>deterministic</b> — same input, same path, and a stack trace when it breaks. An
+            agent is neither: it <b>decides its own steps</b>, calls tools, and can fail <i>silently</i> — a wrong
+            tool, a bad answer, a runaway loop. You can't fix what you can't see.
+          </p>
+
+          <div class="grid2" style="gap:26px; align-items:stretch">
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; background:#FDF2F2; border-color:#F3B4B4">
+              <p class="lead lg" style="margin:0 0 12px">🕶️ Without monitoring</p>
+              <ul class="ticks tight" style="margin:0">
+                <li class="no">"It gave a weird answer" — but <b>why?</b> No idea.</li>
+                <li class="no">Which tool did it call? With what args?</li>
+                <li class="no">How slow, how many tokens, how much <b>cost</b>?</li>
+                <li class="no" style="padding-bottom:0">Did it error, or just quietly do the wrong thing?</li>
+              </ul>
+            </div>
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset">
+              <p class="lead lg" style="margin:0 0 12px">🔦 With monitoring (tracing)</p>
+              <ul class="ticks tight" style="margin:0">
+                <li class="ok">A <b>trace</b> = the full step-by-step record of one run</li>
+                <li class="ok">Every <b>prompt, tool call, and result</b>, in order</li>
+                <li class="ok"><b>Latency, tokens &amp; cost</b> per step</li>
+                <li class="ok" style="padding-bottom:0">Failures surfaced, not hidden</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout info big">
+            <p class="ct">🧭 The mental model</p>
+            <p class="cb">Monitoring an agent = <b>recording every run so you can replay it</b>. The terminal trace we added is the mini version; <b>LangSmith</b> is the same idea, in a dashboard, for production. It's how you go from "it feels off" to "here's the exact step that broke."</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The CONCEPT slide before the setup. Core point: agents are non-deterministic and fail silently, so unlike
+        a normal app you can't rely on stack traces — you need a recorded trace of each run. Contrast without/with.
+        Callback: the terminal log we added IS a mini-trace; LangSmith is that idea productionised. Then next slide
+        shows how simple it is to turn on.
+      </aside>
+    </section>
+
+    <!-- SLIDE — observability: trace, debug, evaluate (depth from AgentOps) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Simple monitoring with LangSmith</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.05">
+            <p class="body lg" style="margin:0 0 16px">
+              An agent is a black box until you can <b>see inside it</b>. LangSmith records every run —
+              prompts, <b>tool calls</b>, tokens, latency, errors — so you can debug and watch it in production.
+            </p>
+            <p class="body lg" style="margin:0 0 12px">The best part: <b>zero code changes.</b> Set four env vars and every run is traced automatically:</p>
+<pre class="code" style="margin:0; font-size:14px; line-height:1.7"><span class="str">LANGSMITH_TRACING</span>=true
+<span class="str">LANGSMITH_API_KEY</span>=ls-...
+<span class="str">LANGSMITH_PROJECT</span>=knowledge-assistant
+<span class="str">LANGSMITH_ENDPOINT</span>=https://api.smith.langchain.com</pre>
+          </div>
+          <div style="flex:.95">
+            <p class="kicker">WHAT YOU GET IN THE DASHBOARD</p>
+            <ul class="ticks" style="margin-top:10px">
+              <li class="ok"><b>Every trace</b> — the full agent → tool → agent path, step by step</li>
+              <li class="ok"><b>Which tool ran</b>, with its inputs &amp; outputs</li>
+              <li class="ok"><b>Tokens, latency &amp; cost</b> per run</li>
+              <li class="ok" style="padding-bottom:0"><b>Errors</b> surfaced, so failures aren't invisible</li>
+            </ul>
+            <div class="callout good" style="margin-top:16px">
+              <p class="ct">✅ Start here</p>
+              <p class="cb">Tracing is the cheapest, highest-value observability. <b>Evaluation</b> (scoring on a dataset, LLM-as-a-judge) is the natural next step once you're tracing.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Lead with the simple win: LangSmith tracing = 4 env vars, zero code changes, auto-instruments every run.
+        Show a live trace in the dashboard (agent→tool→agent, tokens, latency). Evaluation is the next step but
+        keep it light — tracing is the 80/20. These same vars go into the Render blueprint.
+      </aside>
+    </section>
+
+    <!-- HANDS-ON — Module 9 notebooks -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">📓 Hands-on · Ship &amp; observe</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.3">
+            <span class="demo-eyebrow">SHIP IT · LOCAL FILES → LIVE</span>
+            <div style="margin-top:14px">
+              <div class="nb sm">
+                <div class="ic">🔍</div>
+                <div class="meta">
+                  <p class="nm">1 · Turn on LangSmith tracing</p>
+                  <span class="fl">4 env vars in .env → chat → open the dashboard</span>
+                  <p class="ds">See a full trace of one request: agent → tools → answer, with tokens &amp; latency.</p>
+                </div>
+                <span class="tag demo">MONITOR</span>
+              </div>
+              <div class="nb sm">
+                <div class="ic">🚀</div>
+                <div class="meta">
+                  <p class="nm">2 · Deploy via Render blueprint</p>
+                  <span class="fl">render.yaml · requirements.txt → connect repo</span>
+                  <p class="ds">Connect the repo, set secrets in the dashboard, get a live shareable URL.</p>
+                </div>
+                <span class="tag project">LIVE</span>
+              </div>
+            </div>
+            <p class="body lg" style="margin:16px 0 0">
+              Same files from Module 8 — now traced and on the internet.
+            </p>
+          </div>
+          <div style="flex:.7">
+            <p class="kicker">WATCH FOR</p>
+            <ul class="watch" style="margin-top:12px">
+              <li>A full <b>trace</b> appear in LangSmith</li>
+              <li><span style="font-family:var(--font-mono)">render.yaml</span> driving the deploy</li>
+              <li>The <b>live URL</b> serving our agent</li>
+              <li>A <b>cold start</b> on the first hit</li>
+            </ul>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Two steps: (1) add the 4 LangSmith env vars, chat, show the trace in the dashboard — the simple-monitoring
+        win. (2) Deploy via the render.yaml blueprint: connect repo, set secrets, live URL. Both use files already
+        in src/ (render.yaml, requirements.txt). I can't click a real Render deploy in-session — walk it live.
+      </aside>
+    </section>
+
+    <!-- SLIDE — recap / what you built (2-col fill height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">What you built today</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body" style="justify-content:space-between; padding-top:4px">
+          <div class="grid3 grow" style="align-items:stretch; margin-bottom:22px">
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; justify-content:center">
+              <p class="lead" style="margin:0 0 8px; font-size:20px">🔁 An agent, not a prompt</p>
+              <p class="body lg" style="margin:0">A ReAct loop with state, tools and routing — built on LangGraph.</p>
+            </div>
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; justify-content:center">
+              <p class="lead" style="margin:0 0 8px; font-size:20px">🧩 Grounded &amp; connected</p>
+              <p class="body lg" style="margin:0">RAG + MCP wire it to real docs, Slack and GitHub.</p>
+            </div>
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; justify-content:center">
+              <p class="lead" style="margin:0 0 8px; font-size:20px">🚀 Deployed &amp; observable</p>
+              <p class="body lg" style="margin:0">A Streamlit app, live on Render, traced with LangSmith.</p>
+            </div>
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; justify-content:center">
+              <p class="lead" style="margin:0 0 8px; font-size:20px">🧠 Judgement</p>
+              <p class="body lg" style="margin:0">When to use an agent — and when a plain call is smarter.</p>
+            </div>
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; justify-content:center">
+              <p class="lead" style="margin:0 0 8px; font-size:20px">🛠️ Reliable tools</p>
+              <p class="body lg" style="margin:0">Narrow, typed, well-described — the model's dependable hands.</p>
+            </div>
+            <div class="card" style="padding:24px 26px; display:flex; flex-direction:column; justify-content:center">
+              <p class="lead" style="margin:0 0 8px; font-size:20px">⚖️ Scale sensibly</p>
+              <p class="body lg" style="margin:0">Multi-agent when it earns its complexity — not by default.</p>
+            </div>
+          </div>
+          <div class="callout info big">
+            <p class="ct">🎯 The meta-lesson</p>
+            <p class="cb">Agentic AI is <b>engineering, not alchemy</b>. A loop over state, tools, and routing — grounded in real data and shipped like any other app. You now have the whole stack.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The recap people photograph. Six concrete things they leave with, tied to the modules. Land the
+        meta-lesson: it's engineering — a controllable loop, grounded, deployed and observable.
+      </aside>
+    </section>
+
+    <!-- SLIDE — closing -->
+    <section class="bg-dark">
+      <div class="stage">
+        <div class="abs orb t-orb" style="left:760px; top:120px; width:470px"><img src="assets/orb.png" alt=""></div>
+        <div class="abs" style="left:53px; top:160px; width:700px">
+          <p class="kicker" style="color:var(--teal)">THANK YOU</p>
+          <p class="pull" style="font-size:46px; margin:12px 0 0">
+            You went from <span class="accent">0 to a deployed</span><br>agentic system — today.
+            <span style="display:block; font-size:26px; color:var(--slate-200); font-weight:400; margin-top:14px">Now go build something that reaches beyond the prompt.</span>
+          </p>
+          <div style="margin-top:34px; display:flex; gap:14px; flex-wrap:wrap">
+            <span class="pill teal dot">Code &amp; notebooks shared</span>
+            <span class="pill blue dot">LangGraph + RAG + MCP</span>
+            <span class="pill orange dot">Live on Render</span>
+          </div>
+          <p class="body lg on-dark" style="margin:28px 0 0">Alessandro Romano&nbsp;&nbsp;·&nbsp;&nbsp;Questions?</p>
+        </div>
+        <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
+        <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
+      </div>
+      <aside class="notes">
+        Close on the arc: 0 → deployed agent in one day. Point them to the shared repo/notebooks. Invite questions.
+        Anticipated: deeper eval, cost control, guardrails, when to go multi-agent, streaming/latency.
+      </aside>
+    </section>
+
+  </div>
+</div>
+
+<script src="vendor/reveal.min.js"></script>
+<script>
+  Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0,
+    hash: true,
+    controls: true,
+    progress: true,
+    slideNumber: 'c/t',
+    transition: 'slide'
+  });
+</script>
+</body>
+</html>

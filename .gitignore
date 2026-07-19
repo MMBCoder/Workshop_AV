@@ -1,0 +1,29 @@
+# Reference notebooks from a previous course — kept locally, not part of the repo
+Notebooks Examples/
+
+# secrets — never commit
+**/.env
+.env
+
+# python env / caches
+**/.venv/
+.venv/
+**/__pycache__/
+*.pyc
+
+# uv lock is fine to commit; the resolved env is not
+# (uv.lock kept intentionally)
+
+# notebooks
+**/.ipynb_checkpoints/
+
+# local vector stores / data the app builds at runtime
+**/chroma_db/
+**/*.sqlite3
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# generator scripts used to build notebooks (optional — remove this line to keep them)
+src/notebooks/_build_module*.py
