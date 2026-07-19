@@ -1,0 +1,23 @@
+# From 0 to Agentic AI: Design, Build & Deploy with LangGraph
+
+Materials for the DataHack Summit 2026 workshop by **Alessandro Romano**.
+
+Build a production **AI Knowledge Assistant** — from a single LLM call to a
+deployed, multi-tool agent with RAG, memory, and MCP.
+
+## What's here
+
+- **📊 Slides** — [view the deck](https://example.com/slides) *(link coming soon)*
+- **📁 `src/`** — all the learning materials: hands-on notebooks (per module) and
+  the Knowledge Assistant app you build and deploy. See [`src/README.md`](src/README.md)
+  for setup and how to run.
+
+## Quick start
+
+```bash
+cd src
+uv sync            # install everything
+# add your API keys to src/.env
+uv run jupyter lab                      # run the notebooks
+uv run streamlit run app/solution/app.py   # run the app
+```
