@@ -285,6 +285,43 @@
 .pill.blue   { background: #E8F1FE; border-color: #B7D3FB; color: #1E5FC4; }
 .pill.dot::before { content:""; width:7px; height:7px; border-radius:50%; background: currentColor; }
 
+/* ---- about-me slide (portrait + roles + podcast card) ---- */
+.me-photo {
+  border-radius: 20px; overflow: hidden; border: 1px solid var(--panel-line);
+  background: var(--panel-tint); box-shadow: 0 10px 30px rgba(15,34,71,.10);
+  position: relative;
+}
+.me-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; }
+.me-caption { margin: 0; text-align: center; font-family: var(--font-head); font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--slate-500); }
+.me-roles { display: flex; flex-wrap: wrap; gap: 12px; max-width: 520px; }
+.me-roles .pill { font-size: 15.5px; padding: 10px 18px; }
+.me-podcast {
+  display: inline-flex; align-self: flex-start; align-items: center; gap: 18px; margin-top: 30px;
+  padding: 16px 26px 16px 18px; border-radius: 16px;
+  background: var(--panel-tint); border: 1px solid var(--panel-line);
+  box-shadow: 0 5px 18px rgba(15,34,71,.07);
+}
+.me-podcast .mp-logo { width: 66px; height: 66px; border-radius: 12px; display: block; }
+.me-podcast .mp-txt { margin-right: 6px; }
+.me-podcast .mp-role {
+  margin: 0 0 3px; font-family: var(--font-head); font-weight: 800;
+  font-size: 12px; letter-spacing: 2.5px; color: var(--orange);
+}
+.me-podcast .mp-name {
+  margin: 0; font-family: var(--font-head); font-weight: 700;
+  font-size: 19px; color: var(--navy-800);
+}
+.me-podcast .mp-desc {
+  margin: 5px 0 0; font-size: 13.5px; line-height: 1.35; color: var(--slate-500); max-width: 300px;
+}
+.me-podcast .mp-scan {
+  margin: 8px 0 0; font-size: 13px; font-weight: 700; color: var(--teal);
+}
+.me-podcast .mp-qr {
+  width: 124px; height: 124px; display: block; border-radius: 8px;
+  padding: 6px; background: #fff; border: 1px solid var(--panel-line);
+}
+
 /* ---- tick / cross lists ---- */
 .ticks { list-style: none; margin: 0; padding: 0; }
 .ticks li {
@@ -432,6 +469,35 @@
 .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
 .grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
 .row-flex { display:flex; gap:18px; }
+
+/* ---- "how to succeed" rule cards (icon + rule + why) ---- */
+.rules { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.rule {
+  position:relative; display:flex; align-items:flex-start; gap:14px;
+  padding:16px 18px; border-radius:14px;
+  background:var(--panel-tint); border:1px solid var(--panel-line);
+  box-shadow:0 5px 18px rgba(15,34,71,.06);
+  border-top:3px solid var(--panel-line);
+}
+.rule .ic {
+  flex:none; font-size:24px; line-height:1;
+  width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; border:1px solid var(--panel-line);
+}
+.rule .rt {
+  margin:0 0 5px; font-family:var(--font-head); font-weight:700;
+  font-size:18.5px; line-height:1.2; color:var(--navy-800);
+}
+.rule .rb { margin:0; color:var(--ink-600); font-size:14.5px; line-height:1.4; }
+.rule .rb b { color:var(--navy-800); }
+/* accent variants — colour the top edge + icon tile */
+.rule.orange { border-top-color:var(--orange); }
+.rule.orange .ic { background:#FFF1E6; border-color:#FFD2AC; }
+.rule.teal   { border-top-color:var(--teal); }
+.rule.teal   .ic { background:#E5F7F4; border-color:#A9E6DD; }
+.rule.blue   { border-top-color:var(--blue); }
+.rule.blue   .ic { background:#E8F1FE; border-color:#B7D3FB; }
 
 /* ---- token strip (for the -100 masking slide) ---- */
 .tokgrid { display:flex; align-items:stretch; gap:10px; }

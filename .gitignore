@@ -27,3 +27,9 @@ Notebooks Examples/
 
 # generator scripts used to build notebooks (optional — remove this line to keep them)
 src/notebooks/_build_module*.py
+
+# exported slide deck — kept local, hosted elsewhere (too big for git)
+*.pdf
+
+# deepeval local cache / telemetry
+.deepeval/
