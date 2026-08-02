@@ -32,7 +32,7 @@
       </div>
       <aside class="notes">
         Welcome. A full-day, hands-on, build-it-live workshop. We start from a single LLM call and end with a
-        deployed, multi-source agentic application. Every concept is applied in a Colab notebook immediately — the
+        deployed, multi-source agentic application. Every concept is applied in a notebook immediately — the
         pieces accumulate into one real system by the end of the day.
       </aside>
     </section>
@@ -336,13 +336,13 @@
 
           <div class="callout good big">
             <p class="ct">📓 Look for the teal slide</p>
-            <p class="cb">Each section closes on a <b>Hands-on</b> slide that names the exact notebook(s) to open and what to watch for. That's your cue to open the notebook. Everything is in the shared repo — run it locally (<span style="font-family:var(--font-mono)">uv</span>), or upload to Colab.</p>
+            <p class="cb">Each section closes on a <b>Hands-on</b> slide that names the exact notebook(s) to open and what to watch for. That's your cue to open the notebook. Everything is in the shared repo — run it locally in Jupyter (<span style="font-family:var(--font-mono)">uv run jupyter lab</span>); Colab works as a fallback.</p>
           </div>
         </div>
         <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
       </div>
       <aside class="notes">
-        Explain the format so people know when to code vs listen. The teal "Hands-on" slide is the switch-to-Colab
+        Explain the format so people know when to code vs listen. The teal "Hands-on" slide is the switch-to-Jupyter
         signal. Reassure: notebooks are ready in the repo; no one has to type from scratch under time pressure.
       </aside>
     </section>
@@ -370,15 +370,15 @@
               <ul class="ticks" style="margin-top:10px">
                 <li class="dot"><b>Basic Python</b> — functions, classes, virtual environments</li>
                 <li class="dot"><b>An OpenAI API key</b> — for LLM access</li>
-                <li class="dot"><b>A Tavily or Seltz AI key</b> — for web search / tools</li>
+                <li class="dot"><b>A Tavily key and a Seltz AI key</b> — web search; Tavily in Modules 2&amp;4, Seltz from Module 5 on</li>
                 <li class="dot" style="padding-bottom:0"><b>A Render account</b> <span style="color:var(--slate-500); font-weight:400">(optional)</span> — to deploy; you can also just run it locally</li>
               </ul>
             </div>
             <div>
               <p class="kicker">WHERE WE'LL WORK</p>
               <ul class="ticks" style="margin-top:10px">
-                <li class="ok"><b>Locally with <span style="font-family:var(--font-mono)">uv</span></b> — the recommended setup for everything</li>
-                <li class="ok"><b>Google Colab</b> — an option: upload a notebook &amp; run</li>
+                <li class="ok"><b>Locally in Jupyter with <span style="font-family:var(--font-mono)">uv</span></b> — how we'll work all day</li>
+                <li class="ok"><b>Google Colab</b> — fallback only: upload a notebook &amp; run</li>
                 <li class="ok"><b>A laptop + internet</b> — able to install packages</li>
                 <li class="ok" style="padding-bottom:0"><b>The shared repo</b> — cloned and ready to go</li>
               </ul>
@@ -2717,12 +2717,12 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
         <div class="abs orb s-orb"><img src="assets/orb.png" alt=""></div>
         <div class="abs s-number">09</div>
         <div class="abs s-label">SECTION · SHIP</div>
-        <div class="abs s-title">Deployment &amp; monitoring</div>
-        <div class="abs s-desc">Package it, manage secrets, ship it live — then watch it with tracing &amp; evaluation.</div>
+        <div class="abs s-title">Monitoring &amp; deployment</div>
+        <div class="abs s-desc">See what your agent is really doing with tracing &amp; evaluation — then ship it live.</div>
         <div class="abs footer-date">August 05–08, 2026&nbsp;&nbsp;·&nbsp;&nbsp;The Leela Bhartiya City, Bengaluru</div>
         <div class="abs footer-hxai"><span class="human">Human</span><span class="x"> × </span><span class="ai">AI</span></div>
       </div>
-      <aside class="notes">The finish line. From "works on my laptop" to "live on the internet" — plus how to know it keeps working.</aside>
+      <aside class="notes">The finish line. First: how do you even know what your agent did? Then: from "works on my laptop" to "live on the internet."</aside>
     </section>
 
     <!-- SLIDE — why monitor an agent (the concept) -->
@@ -2792,7 +2792,7 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
             </p>
             <p class="body lg" style="margin:0 0 12px">The best part: <b>zero code changes.</b> Set four env vars and every run is traced automatically:</p>
 <pre class="code" style="margin:0; font-size:14px; line-height:1.7"><span class="str">LANGSMITH_TRACING</span>=true
-<span class="str">LANGSMITH_API_KEY</span>=ls-...
+<span class="str">LANGSMITH_API_KEY</span>=lsv2_pt_...
 <span class="str">LANGSMITH_PROJECT</span>=knowledge-assistant
 <span class="str">LANGSMITH_ENDPOINT</span>=https://api.smith.langchain.com</pre>
           </div>
@@ -2837,7 +2837,7 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
             </p>
             <ul class="numlist" style="margin:0">
               <li><span class="n">1</span><b>New project</b> — name it <span style="font-family:var(--font-mono)">knowledge-assistant</span></li>
-              <li><span class="n">2</span><b>Pick the framework</b> — LangGraph → Python</li>
+              <li><span class="n">2</span><b>Pick the framework</b> — LangGraph, then switch the language to <b>Python</b> (it opens on TypeScript)</li>
               <li><span class="n">3</span><b>Generate API Key</b> — copy it once, it won't show again</li>
               <li><span class="n">4</span><b>Paste into <span style="font-family:var(--font-mono)">.env</span></b> — the four <span style="font-family:var(--font-mono)">LANGSMITH_*</span> vars</li>
               <li style="padding-bottom:0"><span class="n">5</span><b>Ask a question</b> — refresh the dashboard, the trace is there</li>
@@ -2850,11 +2850,12 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
           <div style="flex:1.25; justify-content:flex-start !important">
             <div class="shot" style="margin-top:30px">
               <div class="bar"><i></i><i></i><i></i><span>smith.langchain.com</span></div>
-              <div class="win" style="height:392px; overflow:hidden">
+              <div class="win">
                 <img src="assets/langsmith-setup.png"
-                     alt="LangSmith setup screen — waiting for traces, framework picker, and the LANGSMITH_* environment variables">
+                     alt="LangSmith setup screen — waiting for traces, framework picker, language selector, and the LANGSMITH_* environment variables">
               </div>
             </div>
+            <p class="muted" style="margin:16px 0 0; line-height:1.55">Note the language tab: it lands on <b>TypeScript</b>. Click <b>Python</b>, then use the <span style="font-family:var(--font-mono)">.env</span> tab instead of <span style="font-family:var(--font-mono)">Shell</span>.</p>
           </div>
         </div>
         <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
@@ -2996,7 +2997,8 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
     <span class="kw">plan</span>: free
     <span class="kw">rootDir</span>: src
     <span class="kw">buildCommand</span>: <span class="str">pip install uv &amp;&amp; uv sync --frozen</span>
-    <span class="kw">startCommand</span>: <span class="str">uv run streamlit run app/app.py ...</span>
+    <span class="kw">startCommand</span>: <span class="str">uv run streamlit run app/solution/app.py ...</span>
+    <span class="kw">healthCheckPath</span>: /_stcore/health
     <span class="kw">envVars</span>:
       - <span class="kw">key</span>: OPENAI_API_KEY
         <span class="kw">sync</span>: <span class="num">false</span>   <span class="com"># ← set in the dashboard</span>

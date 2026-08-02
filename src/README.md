@@ -41,14 +41,23 @@ uv run jupyter lab
 
 ## Run the app
 
-The Knowledge Assistant is a Streamlit app — it runs **locally**, not in a notebook:
+The Knowledge Assistant is a Streamlit app — it runs **locally**, not in a notebook.
+
+`app/app.py` is written for you. `app/assistant.py` is the assignment: fill in its
+TODOs, then run it with
 
 ```bash
 uv run streamlit run app/app.py
 ```
 
-Opens at `http://localhost:8501`. Chat with it — it searches the web, answers from
-company docs (RAG), and remembers the conversation.
+Want to see it working first? The finished version runs as-is:
+
+```bash
+uv run streamlit run app/solution/app.py
+```
+
+Either opens at `http://localhost:8501`. Chat with it — it searches the web, answers
+from company docs (RAG), and remembers the conversation.
 
 ## Option — Google Colab (notebooks only)
 

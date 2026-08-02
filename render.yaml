@@ -12,6 +12,9 @@ services:
     rootDir: src
     buildCommand: pip install uv && uv sync --frozen
     startCommand: uv run streamlit run app/solution/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    # Streamlit's own readiness endpoint. Without this Render only probes the TCP
+    # port, which opens before the app is actually serving requests.
+    healthCheckPath: /_stcore/health
     envVars:
       - key: OPENAI_API_KEY
         sync: false          # set in the Render dashboard (never commit secrets)
