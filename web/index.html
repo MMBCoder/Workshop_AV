@@ -2912,6 +2912,55 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
     </section>
 
     <!-- DEMO — deploy the blueprint to Render (switch to the browser) -->
+    <!-- CONCEPT — infrastructure as code / the blueprint -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">The blueprint <span style="color:var(--slate-400); font-weight:700">&nbsp;·&nbsp;</span> infrastructure as code</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1; justify-content:flex-start !important">
+            <span class="eyebrow" style="margin-top:18px">ONE FILE DESCRIBES THE SERVER</span>
+            <p class="body lg" style="margin:14px 0 18px">
+              We never click "create a service." We commit a <span style="font-family:var(--font-mono)">render.yaml</span> that
+              <b>declares</b> what should exist — and let the platform make reality match the file.
+            </p>
+            <ul class="ticks tight" style="margin:0">
+              <li class="no"><b>Clicking through a dashboard</b> — nobody remembers what you picked, nothing is reviewable, and it dies with your browser tab</li>
+              <li class="ok"><b>A file in git</b> — diffable, reviewable, and it recreates the same service on a fresh account</li>
+              <li class="ok"><b>The repo is the source of truth</b> — change the file, push, the infrastructure follows</li>
+            </ul>
+            <div class="callout good" style="margin-top:20px">
+              <p class="ct">✅ Same idea as your code</p>
+              <p class="cb">Your agent's behaviour lives in <span style="font-family:var(--font-mono)">.py</span> files. Its <b>server</b> now lives in a <span style="font-family:var(--font-mono)">.yaml</span> file. Both versioned, both reviewed.</p>
+            </div>
+          </div>
+          <div style="flex:1; justify-content:flex-start !important">
+            <p class="kicker" style="margin-top:20px">RENDER, READING OUR BLUEPRINT</p>
+            <div class="shot" style="margin-top:12px">
+              <div class="bar"><i></i><i></i><i></i><span>dashboard.render.com</span></div>
+              <div class="win"><img src="assets/render-blueprint-env.png" alt="Render's Blueprint screen: it read render.yaml and pre-filled the knowledge-assistant web service and its three secret env vars"></div>
+            </div>
+            <p class="muted" style="margin:12px 0 0">We typed <b>none</b> of the left column. Render read it from the file.</p>
+            <div class="callout info" style="margin-top:18px">
+              <p class="ct">🔎 Everything except the secrets</p>
+              <p class="cb">The service name, runtime, plan and every key came from <span style="font-family:var(--font-mono)">render.yaml</span> at the repo root. The empty boxes are exactly our <span style="font-family:var(--font-mono)">sync: false</span> values — the one thing a file in git must <b>never</b> hold.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The concept slide behind the next demo. Key line: infrastructure as code means the server is described by a
+        file we commit, not by a sequence of clicks nobody wrote down. Point at the screenshot — Render is echoing our
+        render.yaml back at us: it already knows the service name, the runtime, the plan, and which env vars exist.
+        We typed none of that into the UI. Secrets are the deliberate exception: sync:false means "this value never
+        goes in the repo, ask a human." Callback to Module 1: same reason we put API keys in .env, not in the notebook.
+      </aside>
+    </section>
+
     <section class="bg-light">
       <div class="stage">
         <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
