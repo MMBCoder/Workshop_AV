@@ -30,7 +30,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # enablement: turns Pages on itself the first time this runs, so there's
+      # no Settings → Pages step. Needs the repo to be public on a free plan.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
