@@ -8,7 +8,7 @@ deployed, multi-tool agent with RAG, memory, and MCP.
 ## What's here
 
 - **📊 Slides** — [view the deck](https://pigna90.github.io/langgraph-workshop/)
-  (source in [`web/`](web/); use `→`/`space` to advance, `s` for speaker notes)
+  (source in [`web/`](web/); press `F` for fullscreen while presenting)
 - **📁 `src/`** — all the learning materials: hands-on notebooks (per module) and
   the Knowledge Assistant app you build and deploy. See [`src/README.md`](src/README.md)
   for setup and how to run.
