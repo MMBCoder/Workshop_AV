@@ -470,6 +470,47 @@
 .grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
 .row-flex { display:flex; gap:18px; }
 
+/* ---- live-demo screenshot frame (browser-chrome look) ---- */
+.shot {
+  border-radius: 12px; overflow: hidden; background: #fff;
+  border: 1px solid var(--panel-line); box-shadow: 0 10px 30px rgba(15,34,71,.14);
+}
+.shot .bar {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 12px; background: #EEF2FA; border-bottom: 1px solid var(--panel-line);
+}
+.shot .bar i { width: 9px; height: 9px; border-radius: 50%; background: #CBD5E8; display: block; }
+.shot .bar span {
+  margin-left: 8px; font-family: var(--font-mono); font-size: 11.5px; color: var(--slate-500);
+}
+.shot img { width: 100%; display: block; }
+/* crop to the interesting top region when the source is a tall screenshot */
+.shot.crop { position: relative; }
+.shot.crop .win { overflow: hidden; }
+.shot.crop .win img { margin-top: 0; }
+
+/* ---- big "clone this repo" banner ---- */
+.repo-banner {
+  display:flex; align-items:center; gap:22px;
+  padding:20px 28px; border-radius:16px;
+  background:var(--navy-900); border:1px solid var(--navy-700);
+  box-shadow:0 8px 26px rgba(15,34,71,.18);
+}
+.repo-banner .rb-ic { font-size:38px; line-height:1; flex:none; }
+.repo-banner .rb-txt { flex:1; min-width:0; }
+.repo-banner .rb-label {
+  margin:0 0 6px; font-family:var(--font-head); font-weight:800;
+  font-size:12.5px; letter-spacing:2.5px; color:var(--teal);
+  text-transform:uppercase;
+}
+.repo-banner .rb-url {
+  margin:0; font-family:var(--font-mono); font-weight:700;
+  font-size:29px; line-height:1.15; color:#fff;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.repo-banner .rb-url .host { color:var(--slate-400); font-weight:400; }
+.repo-banner .rb-note { margin:7px 0 0; font-size:15px; color:var(--slate-300); }
+
 /* ---- "how to succeed" rule cards (icon + rule + why) ---- */
 .rules { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 .rule {
@@ -558,6 +599,12 @@
            padding:4px 11px; }
 .nb .tag.demo    { background:#E8F1FE; border:1px solid #B7D3FB; color:#1E5FC4; }
 .nb .tag.project { background:#FFF1E6; border:1px solid #FFD2AC; color:#C4560E; }
+/* "already written for you" vs "you fill the TODOs" */
+.nb .tag.given   { background:#EEF2F9; border:1px solid var(--panel-line); color:var(--slate-500); }
+.nb .tag.build   { background:#FFE9D6; border:1px solid var(--orange); color:#C4560E; }
+/* a card for a file that is provided, not built — mute the teal accent */
+.nb.given { background:#F5F7FB; border-color:var(--panel-line); border-left-color:var(--slate-400); }
+.nb.given .fl { color:var(--slate-500); border-color:var(--panel-line); }
 
 /* compact variant when a slide lists 3+ notebooks */
 .nb.sm { padding:12px 16px; gap:12px; }

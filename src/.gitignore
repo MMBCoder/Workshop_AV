@@ -3,7 +3,8 @@
 
 # uv / venv
 .venv/
-uv.lock
+# uv.lock IS committed — it pins exact versions so everyone (and Render) installs
+# the same thing. `uv sync --frozen` in render.yaml depends on it being here.
 
 # python
 __pycache__/

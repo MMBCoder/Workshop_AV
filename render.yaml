@@ -1,14 +1,17 @@
 # Render Blueprint — deploy the Knowledge Assistant from the repo.
 # In Render: New + → Blueprint → connect this repo. Render reads this file,
 # creates the service, and redeploys on every git push. Fill secrets in the dashboard.
+#
+# Same uv workflow as your laptop: `uv sync` installs from pyproject.toml + uv.lock,
+# `uv run` executes inside that environment. No requirements.txt, no pip.
 services:
   - type: web
     name: knowledge-assistant
     runtime: python
     plan: free
     rootDir: src
-    buildCommand: pip install -r requirements.txt
-    startCommand: streamlit run app/solution/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    buildCommand: pip install uv && uv sync --frozen
+    startCommand: uv run streamlit run app/solution/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
     envVars:
       - key: OPENAI_API_KEY
         sync: false          # set in the Render dashboard (never commit secrets)

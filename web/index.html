@@ -161,7 +161,48 @@
     </section>
 
     <!-- ============================================================
-         SLIDE 4 — AGENDA (9 modules in 3 phases)
+         SLIDE 4 — HOW TO DO THE ASSIGNMENTS (solutions are in the repo)
+         ============================================================ -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">How to work through the assignments</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <div class="callout warn big" style="margin:0">
+            <p class="ct">🔓 Yes — the solutions are already in the repo</p>
+            <p class="cb">Every assignment ships with its <b><span style="font-family:var(--font-mono)">_SOLUTION</span></b> notebook. Nobody is stopping you from opening them — and I'm not going to pretend otherwise. But the learning is in the <b>attempt</b>, not the answer.</p>
+          </div>
+
+          <div class="flow">
+            <div class="step"><span class="no">01</span><div class="ic">✍️</div><p class="st">Try it yourself</p><p class="sd">Write something — even if you're sure it's wrong</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">02</span><div class="ic">🤔</div><p class="st">Sit in the stuck</p><p class="sd">Two minutes of confusion is where it actually clicks</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">03</span><div class="ic">👨‍🏫</div><p class="st">Then watch me</p><p class="sd">I walk through the solution live and explain the why</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">04</span><div class="ic">🔍</div><p class="st">Read the solution</p><p class="sd">Compare it to yours — now it means something</p></div>
+          </div>
+
+          <div class="callout good big" style="margin:0">
+            <p class="ct">💚 This material is yours forever</p>
+            <p class="cb">The repo doesn't expire and it doesn't get taken away. So don't spend today <i>racing to copy</i> — you can read every solution line-by-line tonight, next month, or next year. Spend today on the part you <b>can't</b> do alone: asking me questions.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Be upfront: the _SOLUTION notebooks are right there, and pretending otherwise would be silly. Frame the
+        honest deal — peeking early costs them the one thing they paid for, which is the struggle plus a human to
+        ask. Land the reassurance hard: the material is theirs forever, so there is zero reason to race or copy.
+        Today's scarce resource is me, not the code. 45–60 seconds.
+      </aside>
+    </section>
+
+    <!-- ============================================================
+         SLIDE 5 — AGENDA (9 modules in 3 phases)
          ============================================================ -->
     <section class="bg-light">
       <div class="stage">
@@ -315,6 +356,14 @@
         <div class="abs c-rule"></div>
 
         <div class="abs c-body spread">
+          <div class="repo-banner">
+            <div class="rb-ic">📦</div>
+            <div class="rb-txt">
+              <p class="rb-label">Clone this first</p>
+              <p class="rb-url"><span class="host">github.com/</span>pigna90/langgraph-workshop</p>
+            </div>
+          </div>
+
           <div class="grid2" style="gap:48px">
             <div>
               <p class="kicker">WHAT YOU NEED</p>
@@ -2534,24 +2583,24 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
               <div class="nb sm">
                 <div class="ic">🧠</div>
                 <div class="meta">
-                  <p class="nm">assistant.py</p>
+                  <p class="nm">assistant.py — the graph</p>
                   <span class="fl">src/app/assistant.py</span>
-                  <p class="ds">The v3.1 graph (tools + RAG + memory), extracted from the notebook into reusable code.</p>
+                  <p class="ds"><b>You write this.</b> Fill the TODOs — it's the v3 graph (tools + RAG + memory) moved out of the notebook into reusable code.</p>
                 </div>
-                <span class="tag demo">MODULE</span>
+                <span class="tag build">YOU BUILD</span>
               </div>
-              <div class="nb sm">
+              <div class="nb sm given">
                 <div class="ic">💬</div>
                 <div class="meta">
                   <p class="nm">app.py — the chat UI</p>
                   <span class="fl">uv run streamlit run app/app.py</span>
-                  <p class="ds"><span style="font-family:var(--font-mono)">chat_input</span> → imports &amp; invokes the graph → renders the reply, with tools used shown.</p>
+                  <p class="ds"><b>Already written.</b> Don't touch it — it just imports <span style="font-family:var(--font-mono)">build_assistant()</span> from your file and renders the chat.</p>
                 </div>
-                <span class="tag project">LIVE</span>
+                <span class="tag given">PROVIDED</span>
               </div>
             </div>
-            <p class="body lg" style="margin:16px 0 0">
-              We leave Colab — this runs on <span style="font-family:var(--font-mono)">localhost</span>, the same files Module 9 deploys.
+            <p class="body lg" style="margin:14px 0 0">
+              We leave Jupyter — this runs on <span style="font-family:var(--font-mono)">localhost</span>, the same files Module 9 deploys.
             </p>
           </div>
           <div style="flex:.75">
@@ -2562,14 +2611,20 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
               <li><b>thread_id</b> → it remembers within the chat</li>
               <li>The tools it used, surfaced in the UI</li>
             </ul>
+            <div class="callout warn" style="margin-top:18px">
+              <p class="ct">✅ Your goal</p>
+              <p class="cb">When the app answers a question, <b>you assembled the whole day correctly</b>. Reference in <span style="font-family:var(--font-mono)">app/solution/</span>.</p>
+            </div>
           </div>
         </div>
         <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
       </div>
       <aside class="notes">
-        Leave Colab — Streamlit runs locally. Show the two files: assistant.py (the graph, reused) and app.py (the
-        UI). Run `uv run streamlit run app/app.py`, chat with the assistant we built all day, point out memory
-        (ask a follow-up) and the "used: ..." caption. These exact files get deployed in Module 9.
+        Leave Jupyter — Streamlit runs locally. Be explicit about the split: app.py is PROVIDED (nobody writes a
+        Streamlit UI today), assistant.py is THEIRS to fill — 11 TODOs, the same graph they built in the notebooks.
+        The UI only calls build_assistant(). Then run `uv run streamlit run app/app.py`, chat with the assistant,
+        point out memory (ask a follow-up) and the "used: ..." caption. These exact files get deployed in Module 9.
+        Note: hr_server.py also has 4 TODOs; finance_server.py is provided as the worked example.
       </aside>
     </section>
 
@@ -2670,50 +2725,6 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
       <aside class="notes">The finish line. From "works on my laptop" to "live on the internet" — plus how to know it keeps working.</aside>
     </section>
 
-    <!-- SLIDE — deployment flow (picture flow, fills height) -->
-    <section class="bg-light">
-      <div class="stage">
-        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
-        <div class="abs c-accent"></div>
-        <div class="abs c-title">From laptop to live in four steps</div>
-        <div class="abs c-rule"></div>
-
-        <div class="abs c-body spread">
-          <p class="body lg" style="margin:0; max-width:1080px">
-            Deployment is mostly discipline, not magic. Pin what you depend on, keep secrets out of code, push,
-            and test the running app.
-          </p>
-
-          <div class="flow">
-            <div class="step"><span class="no">01</span><div class="ic">📦</div><p class="st">Package</p><p class="sd">Deps in <span style="font-family:var(--font-mono);font-size:13px">requirements.txt</span> + a <span style="font-family:var(--font-mono);font-size:13px">render.yaml</span> blueprint</p></div>
-            <div class="arrow">→</div>
-            <div class="step"><span class="no">02</span><div class="ic">🔗</div><p class="st">Connect repo</p><p class="sd">Render reads <span style="font-family:var(--font-mono);font-size:13px">render.yaml</span> &amp; provisions the service</p></div>
-            <div class="arrow">→</div>
-            <div class="step"><span class="no">03</span><div class="ic">🔑</div><p class="st">Set secrets</p><p class="sd">API keys as <b>env vars</b> in the dashboard</p></div>
-            <div class="arrow">→</div>
-            <div class="step"><span class="no">04</span><div class="ic">🚀</div><p class="st">Push = deploy</p><p class="sd">Every <span style="font-family:var(--font-mono);font-size:13px">git push</span> auto-redeploys · live URL</p></div>
-          </div>
-
-          <div class="grid2" style="gap:24px; align-items:stretch">
-            <div class="callout good">
-              <p class="ct">✅ The blueprint = infra as code</p>
-              <p class="cb"><span style="font-family:var(--font-mono)">render.yaml</span> in the repo declares the build &amp; start commands and env vars. Connect the repo once — pushes deploy themselves.</p>
-            </div>
-            <div class="callout warn">
-              <p class="ct">⚠️ What bites on the free tier</p>
-              <p class="cb"><b>Cold starts</b> (~30-60s to wake), <b>ephemeral disk</b> (re-embeds once per deploy), and the classic <b>missing env var</b>.</p>
-            </div>
-          </div>
-        </div>
-        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
-      </div>
-      <aside class="notes">
-        Package → connect repo → secrets → push-deploys. The star is the render.yaml blueprint: infra-as-code in the
-        repo, connect once, every git push redeploys. Warn about free-tier cold starts, ephemeral disk (Chroma
-        re-embeds once per deploy — that's why we persist), and the forgot-the-env-var classic.
-      </aside>
-    </section>
-
     <!-- SLIDE — why monitor an agent (the concept) -->
     <section class="bg-light">
       <div class="stage">
@@ -2808,6 +2819,156 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
       </aside>
     </section>
 
+    <!-- DEMO — LangSmith project setup (switch to the browser) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">🖥️ Demo · Set up LangSmith tracing</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.15">
+            <span class="demo-eyebrow">LIVE IN THE BROWSER</span>
+            <p class="body lg" style="margin:16px 0 18px">
+              Let's do it together: create a project on <b>smith.langchain.com</b>, generate an API key, and paste
+              four lines into <span style="font-family:var(--font-mono)">.env</span>. Then chat with the assistant
+              and watch the trace appear.
+            </p>
+            <ul class="numlist" style="margin:0">
+              <li><span class="n">1</span><b>New project</b> — name it <span style="font-family:var(--font-mono)">knowledge-assistant</span></li>
+              <li><span class="n">2</span><b>Pick the framework</b> — LangGraph → Python</li>
+              <li><span class="n">3</span><b>Generate API Key</b> — copy it once, it won't show again</li>
+              <li><span class="n">4</span><b>Paste into <span style="font-family:var(--font-mono)">.env</span></b> — the four <span style="font-family:var(--font-mono)">LANGSMITH_*</span> vars</li>
+              <li style="padding-bottom:0"><span class="n">5</span><b>Ask a question</b> — refresh the dashboard, the trace is there</li>
+            </ul>
+            <div class="callout good" style="margin-top:18px">
+              <p class="ct">✅ Zero code changes</p>
+              <p class="cb">We don't touch <span style="font-family:var(--font-mono)">assistant.py</span>. The env vars alone auto-instrument every LangGraph run.</p>
+            </div>
+          </div>
+          <div style="flex:1.25; justify-content:flex-start !important">
+            <div class="shot" style="margin-top:30px">
+              <div class="bar"><i></i><i></i><i></i><span>smith.langchain.com</span></div>
+              <div class="win" style="height:392px; overflow:hidden">
+                <img src="assets/langsmith-setup.png"
+                     alt="LangSmith setup screen — waiting for traces, framework picker, and the LANGSMITH_* environment variables">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        SWITCH TO THE BROWSER HERE. Walk through it live: new project → LangGraph + Python → Generate API Key →
+        paste the four LANGSMITH_* vars into src/.env. Point out "Waiting for traces…" so they see the before state.
+        Then run the app, ask one question, refresh — the trace appears. Emphasise: no code changes at all.
+        If the network is bad, this screenshot is the fallback.
+      </aside>
+    </section>
+
+    <!-- SLIDE — deployment flow (picture flow, fills height) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">From laptop to live in four steps</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            Deployment is mostly discipline, not magic. Pin what you depend on, keep secrets out of code, push,
+            and test the running app.
+          </p>
+
+          <div class="flow">
+            <div class="step"><span class="no">01</span><div class="ic">📦</div><p class="st">Package</p><p class="sd">A committed <span style="font-family:var(--font-mono);font-size:13px">uv.lock</span> + a <span style="font-family:var(--font-mono);font-size:13px">render.yaml</span> blueprint</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">02</span><div class="ic">🔗</div><p class="st">Connect repo</p><p class="sd">Render reads <span style="font-family:var(--font-mono);font-size:13px">render.yaml</span> &amp; provisions the service</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">03</span><div class="ic">🔑</div><p class="st">Set secrets</p><p class="sd">API keys as <b>env vars</b> in the dashboard</p></div>
+            <div class="arrow">→</div>
+            <div class="step"><span class="no">04</span><div class="ic">🚀</div><p class="st">Push = deploy</p><p class="sd">Every <span style="font-family:var(--font-mono);font-size:13px">git push</span> auto-redeploys · live URL</p></div>
+          </div>
+
+          <div class="grid2" style="gap:24px; align-items:stretch">
+            <div class="callout good">
+              <p class="ct">✅ Same <span style="font-family:var(--font-mono)">uv</span> workflow as your laptop</p>
+              <p class="cb">The server runs <span style="font-family:var(--font-mono)">uv sync --frozen</span> against the committed <span style="font-family:var(--font-mono)">uv.lock</span> — the <b>exact versions you tested</b>. Nothing new to learn, no second deps file to drift.</p>
+            </div>
+            <div class="callout warn">
+              <p class="ct">⚠️ What bites on the free tier</p>
+              <p class="cb"><b>Cold starts</b> (~30-60s to wake), <b>ephemeral disk</b> (re-embeds once per deploy), and the classic <b>missing env var</b>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        Package → connect repo → secrets → push-deploys. The star is the render.yaml blueprint: infra-as-code in the
+        repo, connect once, every git push redeploys. Warn about free-tier cold starts, ephemeral disk (Chroma
+        re-embeds once per deploy — that's why we persist), and the forgot-the-env-var classic.
+      </aside>
+    </section>
+
+    <!-- DEMO — deploy the blueprint to Render (switch to the browser) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">🖥️ Demo · Deploy the blueprint to Render</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body split">
+          <div style="flex:1.02; justify-content:flex-start !important">
+            <span class="demo-eyebrow" style="margin-top:20px">LIVE IN THE BROWSER</span>
+            <p class="body lg" style="margin:14px 0 16px">
+              Nothing to write — the blueprint is already in the repo. We point Render at it and paste our keys.
+            </p>
+            <ul class="numlist" style="margin:0">
+              <li style="padding-bottom:11px"><span class="n">1</span><b>New + → Blueprint</b> — connect the GitHub repo</li>
+              <li style="padding-bottom:11px"><span class="n">2</span><b>Render reads <span style="font-family:var(--font-mono)">render.yaml</span></b> — build &amp; start commands declared</li>
+              <li style="padding-bottom:11px"><span class="n">3</span><b>Paste the secrets</b> — every <span style="font-family:var(--font-mono)">sync: false</span> key, in the dashboard</li>
+              <li style="padding-bottom:11px"><span class="n">4</span><b>Watch the build log</b> — <span style="font-family:var(--font-mono)">uv sync --frozen</span> → Streamlit boots</li>
+              <li style="padding-bottom:0"><span class="n">5</span><b>Open the live URL</b> — ask a question, find that run in LangSmith</li>
+            </ul>
+            <div class="callout good" style="margin-top:16px">
+              <p class="ct">✅ It's the same app</p>
+              <p class="cb">Identical files to Module 8 — no rewrite for "production." Every <span style="font-family:var(--font-mono)">git push</span> redeploys.</p>
+            </div>
+          </div>
+          <div style="flex:.98; justify-content:flex-start !important">
+            <p class="kicker" style="margin-top:24px">THE WHOLE DEPLOY CONFIG</p>
+<pre class="code sm" style="margin:10px 0 0"><span class="com"># render.yaml (repo root)</span>
+<span class="kw">services</span>:
+  - <span class="kw">type</span>: web
+    <span class="kw">name</span>: knowledge-assistant
+    <span class="kw">runtime</span>: python
+    <span class="kw">plan</span>: free
+    <span class="kw">rootDir</span>: src
+    <span class="kw">buildCommand</span>: <span class="str">pip install uv &amp;&amp; uv sync --frozen</span>
+    <span class="kw">startCommand</span>: <span class="str">uv run streamlit run app/app.py ...</span>
+    <span class="kw">envVars</span>:
+      - <span class="kw">key</span>: OPENAI_API_KEY
+        <span class="kw">sync</span>: <span class="num">false</span>   <span class="com"># ← set in the dashboard</span>
+      - <span class="kw">key</span>: LANGSMITH_API_KEY
+        <span class="kw">sync</span>: <span class="num">false</span></pre>
+            <div class="callout warn" style="margin-top:16px">
+              <p class="ct">⚠️ First hit is slow</p>
+              <p class="cb">Free tier cold-starts (~30–60 s) and re-embeds Chroma once per deploy. Don't panic on stage.</p>
+            </div>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        SWITCH TO THE BROWSER HERE. New + → Blueprint → pick the repo → Render parses render.yaml → paste the
+        sync:false secrets → watch the build log → open the live URL. Then close the loop: ask the deployed app a
+        question and show that same run appearing in LangSmith — monitoring and deployment click together here.
+        Cold start is real: warm the service up before this slide if you can, or narrate the wait.
+      </aside>
+    </section>
+
     <!-- HANDS-ON — Module 9 notebooks -->
     <section class="bg-light">
       <div class="stage">
@@ -2833,7 +2994,7 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
                 <div class="ic">🚀</div>
                 <div class="meta">
                   <p class="nm">2 · Deploy via Render blueprint</p>
-                  <span class="fl">render.yaml · requirements.txt → connect repo</span>
+                  <span class="fl">render.yaml · uv.lock → connect repo</span>
                   <p class="ds">Connect the repo, set secrets in the dashboard, get a live shareable URL.</p>
                 </div>
                 <span class="tag project">LIVE</span>
@@ -2858,7 +3019,7 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
       <aside class="notes">
         Two steps: (1) add the 4 LangSmith env vars, chat, show the trace in the dashboard — the simple-monitoring
         win. (2) Deploy via the render.yaml blueprint: connect repo, set secrets, live URL. Both use files already
-        in src/ (render.yaml, requirements.txt). I can't click a real Render deploy in-session — walk it live.
+        in the repo (render.yaml at root, src/uv.lock). I can't click a real Render deploy in-session — walk it live.
       </aside>
     </section>
 
