@@ -22,3 +22,10 @@ uv sync            # install everything
 uv run jupyter lab                      # run the notebooks
 uv run streamlit run app/solution/app.py   # run the app
 ```
+
+## License
+
+[MIT](LICENSE) — use, adapt, and teach from this freely.
+
+Bundled third-party code keeps its own license: `web/vendor/` contains
+[reveal.js](https://revealjs.com) 5.1.0, also MIT, © Hakim El Hattab.
