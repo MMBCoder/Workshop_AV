@@ -365,6 +365,14 @@
 /* dark-slide callout */
 .callout.dark { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); }
 .callout.dark .ct { color:#fff; } .callout.dark .cb { color: var(--slate-200); }
+/* "did you know" aside — deliberately quiet: worth knowing, not today's focus */
+.callout.aside {
+  background: #FBFCFE; border-style: dashed; border-color: var(--line-soft);
+}
+.callout.aside .ct { color: var(--slate-500); }
+.callout.aside .cb { color: var(--slate-500); font-size: 15.5px; }
+.callout.aside .cb b { color: var(--ink-600); }
+.callout.aside.big .cb { font-size: 17px; }
 
 /* ---- stat / KPI tiles ---- */
 .stat { text-align: left; }

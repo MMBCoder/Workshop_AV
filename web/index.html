@@ -622,24 +622,24 @@
 
           <div class="grid3" style="align-items:stretch; gap:14px">
             <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
-              <p class="lead" style="margin:0 0 6px; font-size:18px">💻 Coding assistants</p>
-              <p class="body" style="margin:0; font-size:15px">Read the repo, edit files, run tests, fix what fails — loop until done.</p>
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🏥 Medical triage</p>
+              <p class="body" style="margin:0; font-size:15px">Read the intake notes, check symptoms against protocol, route or escalate to a clinician.</p>
             </div>
             <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
-              <p class="lead" style="margin:0 0 6px; font-size:18px">🎧 Customer support</p>
-              <p class="body" style="margin:0; font-size:15px">Look up the account, check policy, issue a refund or escalate.</p>
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🛡️ Compliance &amp; investigations</p>
+              <p class="body" style="margin:0; font-size:15px">Pull the records, cross-check policy, assemble an evidence trail a human signs off.</p>
             </div>
             <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
-              <p class="lead" style="margin:0 0 6px; font-size:18px">🔎 Deep research</p>
-              <p class="body" style="margin:0; font-size:15px">Search, read, cross-check sources, synthesise a cited report.</p>
+              <p class="lead" style="margin:0 0 6px; font-size:18px">✅ QA automation</p>
+              <p class="body" style="margin:0; font-size:15px">Read the spec, generate cases, run them, triage the failures — loop until green.</p>
             </div>
             <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
-              <p class="lead" style="margin:0 0 6px; font-size:18px">📊 Data &amp; ops analysts</p>
-              <p class="body" style="margin:0; font-size:15px">Question → SQL → run it → interpret → draft the summary.</p>
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🛒 E-commerce &amp; campaigns</p>
+              <p class="body" style="margin:0; font-size:15px">Segment the audience, draft the message, pick the channel, act on what converts.</p>
             </div>
             <div class="card" style="padding:16px 20px; display:flex; flex-direction:column">
-              <p class="lead" style="margin:0 0 6px; font-size:18px">⚙️ Workflow automation</p>
-              <p class="body" style="margin:0; font-size:15px">Triage a ticket, gather context, take the next action or hand off.</p>
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🔎 Research &amp; discovery</p>
+              <p class="body" style="margin:0; font-size:15px">Search literature, cross-check sources, synthesise a cited report — from ops to drug discovery.</p>
             </div>
             <div class="card" style="padding:16px 20px; display:flex; flex-direction:column; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset">
               <p class="lead" style="margin:0 0 6px; font-size:18px">🧭 Knowledge assistants</p>
@@ -649,15 +649,17 @@
 
           <div class="callout info">
             <p class="ct">🎯 Notice the shared shape</p>
-            <p class="cb">All of them <b>retrieve information, reason over it, and take actions</b> across multiple steps. Learn that shape once and you can build any of them — which is exactly what today is about.</p>
+            <p class="cb">Every one of these <b>retrieves information, reasons over it, and takes actions</b> across multiple steps. <b>Same skeleton, different tools and data</b> — which is why the assistant we build today is a template for the one you need at work.</p>
           </div>
         </div>
         <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
       </div>
       <aside class="notes">
-        Covers the syllabus point "real-world use cases in production." Six familiar examples, all sharing the same
-        shape (retrieve → reason → act, over multiple steps). Land it: our knowledge assistant is a superset of
-        these patterns, so the skills transfer directly. Motivates the rest of the day.
+        Covers the syllabus point "real-world use cases in production." These six are deliberately the domains the
+        pre-workshop survey asked about — triage, compliance, QA, e-commerce/campaigns, research/discovery — so
+        say that out loud: "these are your answers from the form." All share one shape (retrieve → reason → act,
+        over multiple steps). Land it: same skeleton, different tools and data, so today's assistant is a template
+        for theirs. We come back to this on the closing "make it yours" slide.
       </aside>
     </section>
 
@@ -814,6 +816,10 @@
               <p class="body lg" style="margin:0">Chain-of-thought &amp; step-by-step for hard tasks — the seed of the ReAct "Thought" we'll formalise next.</p>
             </div>
           </div>
+          <div class="callout aside">
+            <p class="ct">💡 DID YOU KNOW · one agent, several models</p>
+            <p class="cb">Nothing says every call must hit the same model. Production agents <b>route by job</b>: a small fast model for classifying, extracting and routing; a strong one for the final synthesis; a <b>multimodal</b> one when the input is a scan, chart or screenshot. Same graph — you just bind a different model per node. Often the cheapest latency and cost win available.</p>
+          </div>
           <p class="muted" style="margin:0; font-size:15px"><b>Structured output</b> is the one to internalise — it's what lets code trust the model's answer.</p>
         </div>
         <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
@@ -821,6 +827,9 @@
       <aside class="notes">
         These come straight from the prompt-engineering notebook. Emphasise structured outputs (Pydantic) — it's
         the bridge to tool-calling and state. Reasoning prompts foreshadow ReAct's "Thought".
+        The "did you know" answers the survey ask about multi-model agents — 30 seconds: cheap model for
+        routing/extraction, strong model for synthesis, multimodal for scans and charts. In LangGraph it's just a
+        different model bound per node, so it costs no new concepts. We use one model all day for simplicity.
       </aside>
     </section>
 
@@ -1966,9 +1975,14 @@ app = graph.<span class="fn">compile</span>()</pre>
               <p class="body lg" style="margin:0">Embed chunks and store in <b>ChromaDB</b>. Add, update, delete, persist — retrieval by semantic similarity.</p>
             </div>
           </div>
-          <div class="callout warn big">
+          <div class="callout warn">
             <p class="ct">⚠️ Retrieval quality is decided <i>before</i> the LLM</p>
             <p class="cb">If chunking is bad, the model never sees the right context — and no prompt can fix that. <b>Most RAG failures are retrieval failures</b>, upstream of generation.</p>
+          </div>
+
+          <div class="callout aside">
+            <p class="ct">💡 DID YOU KNOW · beyond plain vector search</p>
+            <p class="cb">Vectors are the 80% case, not the ceiling. Two cheap upgrades when retrieval plateaus: <b>hybrid search</b> (keyword + vector — for IDs, codes and exact names) and <b>reranking</b> (retrieve 50, let a cross-encoder keep the best 5). And when a question spans <i>related</i> facts rather than similar text, a graph beats both — that's the next slide.</p>
           </div>
         </div>
         <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
@@ -1976,6 +1990,64 @@ app = graph.<span class="fn">compile</span>()</pre>
       <aside class="notes">
         Maps to the three W2 demos (loaders / splitters / vectors) + the RAG project. The keeper line: most RAG
         failures are retrieval failures — chunking and embedding decisions dominate final quality.
+        The "did you know" box: ~30 seconds. Hybrid = exact-match terms (IDs, SKUs, drug names), reranking =
+        cheapest big win. Then hand off — the KAG slide right after this one does the graph properly.
+      </aside>
+    </section>
+
+    <!-- SLIDE — RAG vs KAG (survey ask: enterprise Agentic RAG/KAG) -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">RAG vs KAG: similar text vs connected facts</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1130px">
+            <b>KAG — Knowledge-Augmented Generation</b> — retrieves from a <b>knowledge graph</b> instead of a pile
+            of chunks. Same goal (ground the model in your data), different question it can answer:
+          </p>
+
+          <div class="grid2" style="gap:24px; align-items:stretch">
+            <div class="card" style="padding:20px 24px; display:flex; flex-direction:column">
+              <span class="pill teal" style="margin-bottom:10px; align-self:flex-start">RAG · VECTORS</span>
+              <p class="lead" style="margin:0 0 8px; font-size:18px">Stores <b>text chunks</b> as embeddings</p>
+              <p class="body" style="margin:0 0 10px; font-size:15.5px">Retrieves by <b>similarity</b>: "give me the 5 passages that look most like this question."</p>
+              <p class="body" style="margin:0; font-size:15.5px; color:var(--slate-500)">Wins when the answer <b>sits in a passage</b> — policies, docs, tickets, papers.</p>
+            </div>
+            <div class="card" style="padding:20px 24px; display:flex; flex-direction:column; border-color:var(--orange); box-shadow:0 0 0 2px var(--orange) inset">
+              <span class="pill orange" style="margin-bottom:10px; align-self:flex-start">KAG · GRAPH</span>
+              <p class="lead" style="margin:0 0 8px; font-size:18px">Stores <b>entities &amp; relationships</b></p>
+              <p class="body" style="margin:0 0 10px; font-size:15.5px">Retrieves by <b>traversal</b>: walk the edges from one entity to the next.</p>
+              <p class="body" style="margin:0; font-size:15.5px; color:var(--slate-500)">Wins when the answer is a <b>path</b> — no single passage contains it.</p>
+            </div>
+          </div>
+
+          <div class="callout warn">
+            <p class="ct">🔗 The question that breaks plain RAG — a multi-hop join</p>
+            <p class="cb" style="margin-bottom:9px"><i>"Which suppliers are connected to this flagged invoice?"</i> &nbsp;No chunk holds that answer — it's three facts in three documents:</p>
+            <p class="cb" style="font-family:var(--font-mono); font-size:15px; color:var(--navy-800)">Invoice&nbsp;412 &nbsp;—issued_by→&nbsp; Supplier&nbsp;X &nbsp;—shares_director_with→&nbsp; Supplier&nbsp;Y &nbsp;—also_billed→&nbsp; Case&nbsp;99</p>
+            <p class="cb" style="margin-top:9px">Similarity returns invoices that <i>read like</i> yours. A graph <b>follows the link</b> — and shows the exact path it took, which is what makes the answer auditable.</p>
+          </div>
+
+          <div class="callout aside">
+            <p class="ct">⚖️ THE HONEST TRADE-OFF · and why we use vectors today</p>
+            <p class="cb">A graph costs you an <b>extraction step</b> (an LLM pulling entities &amp; relations out of text — imperfectly), a schema decision, and a store like Neo4j. Start with vectors; add a graph when questions are truly relational. Mature systems run <b>both</b>. Note: <b>KAG isn't a standardised term</b> — also sold as GraphRAG.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        THE slide several attendees asked for (enterprise Agentic RAG/KAG). ~3 minutes, conceptual — no notebook.
+        Teach it through the example, not the definitions: read the invoice question out loud and ask the room
+        "which chunk contains that answer?" — none does. That's the whole point: RAG retrieves what RESEMBLES the
+        query, a graph retrieves what's CONNECTED to it. Similar text vs connected facts.
+        Then the two payoffs that matter to this audience: multi-hop questions, and an auditable path you can show
+        a regulator or a clinician — relevant to the compliance/investigations and triage folks specifically.
+        Be honest about cost: entity extraction is the hard part and it's lossy; don't let anyone leave thinking a
+        graph is free. Recommend hybrid, and flag that KAG/GraphRAG naming is loose so they ask "which flavour?"
+        when a vendor says it. If asked why we don't build it today: it would be its own workshop.
       </aside>
     </section>
 
@@ -3119,6 +3191,124 @@ app.<span class="fn">invoke</span>(msg, {<span class="str">"configurable"</span>
       <aside class="notes">
         The recap people photograph. Six concrete things they leave with, tied to the modules. Land the
         meta-lesson: it's engineering — a controllable loop, grounded, deployed and observable.
+      </aside>
+    </section>
+
+    <!-- SLIDE — make it yours: mapping today's build onto their own use case -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">Now make it yours</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            You built <b>one</b> assistant — but the skeleton is the same for all of them. To retarget it you swap
+            <b>four things</b>, and keep the loop:
+          </p>
+
+          <table class="cmp compact">
+            <tr>
+              <th style="width:232px">Your use case</th>
+              <th style="width:290px">Knowledge source</th>
+              <th style="width:288px">Tools it needs</th>
+              <th>Shape</th>
+            </tr>
+            <tr>
+              <td>🏥 Medical triage</td>
+              <td>Protocols, patient history</td>
+              <td>Symptom lookup, scheduling</td>
+              <td>Single agent + <b>human approval</b></td>
+            </tr>
+            <tr>
+              <td>🛡️ Compliance / investigations</td>
+              <td>Case files, policy, audit logs</td>
+              <td>Record search, evidence writer</td>
+              <td>Retriever → analyser → <b>reviewer</b></td>
+            </tr>
+            <tr>
+              <td>✅ QA automation</td>
+              <td>Specs, past defects</td>
+              <td>Test runner, log parser</td>
+              <td>ReAct loop, <b>retry on fail</b></td>
+            </tr>
+            <tr>
+              <td>🛒 E-commerce / campaigns</td>
+              <td>Catalogue, segments, past sends</td>
+              <td>Query audience, draft, send</td>
+              <td>Planner → executor, <b>gated send</b></td>
+            </tr>
+            <tr>
+              <td>🔎 Research &amp; discovery</td>
+              <td>Papers, internal datasets</td>
+              <td>Search, fetch, cite</td>
+              <td>Fan-out sub-questions → synthesise</td>
+            </tr>
+          </table>
+
+          <div class="callout good">
+            <p class="ct">✅ Start narrower than feels satisfying</p>
+            <p class="cb">Pick <b>one</b> question your agent must answer well, wire the <b>two</b> tools it truly needs, and put a human in the loop wherever an action is expensive or irreversible. Widen only once it's reliable — that order is what separates the demos from the systems.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The transfer slide — this is the one that answers "how does this apply to MY job", straight from the survey
+        answers (triage, compliance, QA, e-commerce/campaigns, research/discovery). Point at the columns: the
+        skeleton never changes, you swap knowledge source, tools, and topology. Two things to land: (1) human in
+        the loop wherever an action is irreversible — critical for the clinical and compliance folks; (2) start
+        narrower than feels satisfying. Invite them to name their own row out loud if there's time.
+      </aside>
+    </section>
+
+    <!-- SLIDE — honest gaps: what today deliberately left out -->
+    <section class="bg-light">
+      <div class="stage">
+        <div class="abs orb c-orb"><img src="assets/orb.png" alt=""></div>
+        <div class="abs c-accent"></div>
+        <div class="abs c-title">What we didn't cover — and when you'll need it</div>
+        <div class="abs c-rule"></div>
+
+        <div class="abs c-body spread">
+          <p class="body lg" style="margin:0; max-width:1080px">
+            One day buys you the build. These four are what stand between <b>a working agent</b> and one you'd put
+            in front of patients, auditors or customers — worth knowing they exist:
+          </p>
+
+          <div class="grid2" style="gap:16px 20px; align-items:stretch">
+            <div class="card" style="padding:18px 22px">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">📏 Evaluation</p>
+              <p class="body" style="margin:0; font-size:15.5px">"It looked fine" isn't a test. Build a <b>dataset of real questions with expected answers</b>, then score changes against it — LLM-as-judge for quality, exact checks for facts. LangSmith does this; today we only traced.</p>
+            </div>
+            <div class="card" style="padding:18px 22px">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🛡️ Guardrails &amp; access control</p>
+              <p class="body" style="margin:0; font-size:15.5px">Who is asking, what may they see, what must never leave? <b>PII redaction, per-user permissions on retrieval, and human approval before irreversible actions</b> — non-negotiable in health, finance and legal.</p>
+            </div>
+            <div class="card" style="padding:18px 22px">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">💸 Cost &amp; latency</p>
+              <p class="body" style="margin:0; font-size:15.5px">Every loop is tokens. <b>Cap the iterations, cache what repeats, route cheap work to a small model</b>, and stream so it <i>feels</i> fast. Measure before optimising — the trace tells you where it goes.</p>
+            </div>
+            <div class="card" style="padding:18px 22px">
+              <p class="lead" style="margin:0 0 6px; font-size:18px">🎛️ Fine-tuning</p>
+              <p class="body" style="margin:0; font-size:15.5px">Almost always the <b>last</b> resort, not the first. Prompting, tools and retrieval fix most problems; fine-tune only for a <b>consistent behaviour, format or tone</b> a prompt can't buy — it can't teach facts. RAG changes what it knows, fine-tuning changes how it acts.</p>
+            </div>
+          </div>
+
+          <div class="callout aside">
+            <p class="ct">💡 DID YOU KNOW · the order matters more than the techniques</p>
+            <p class="cb">Reach for them in this order: <b>get it working → measure it → make it safe → make it cheap → and only then consider fine-tuning</b>. Teams that invert this spend months tuning a model to fix what a better tool description would have solved in an afternoon.</p>
+          </div>
+        </div>
+        <div class="abs footer-brand">D A T A H A C K &nbsp; S U M M I T &nbsp; 2 0 2 6</div>
+      </div>
+      <aside class="notes">
+        The honest-gaps slide — set expectations and pre-empt the Q&A. Directly answers the survey ask about
+        fine-tuning (4.5): say plainly it's out of scope AND usually the wrong first move — RAG changes what the
+        model knows, fine-tuning changes how it behaves; it can't teach facts. Eval, guardrails and cost are the
+        real production gaps; the health/compliance attendees care most about access control and human approval.
+        Land the ordering line: working → measured → safe → cheap → fine-tuned. Then close.
       </aside>
     </section>
 
