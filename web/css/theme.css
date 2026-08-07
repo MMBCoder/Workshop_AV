@@ -312,15 +312,23 @@
   font-size: 19px; color: var(--navy-800);
 }
 .me-podcast .mp-desc {
-  margin: 5px 0 0; font-size: 13.5px; line-height: 1.35; color: var(--slate-500); max-width: 300px;
+  margin: 5px 0 0; font-size: 13.5px; line-height: 1.35; color: var(--slate-500); max-width: 400px;
 }
-.me-podcast .mp-scan {
-  margin: 8px 0 0; font-size: 13px; font-weight: 700; color: var(--teal);
+.me-podcast .mp-link {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin: 12px 0 0; padding: 9px 16px; border-radius: 999px;
+  text-decoration: none; white-space: nowrap;
+  font-family: var(--font-head); font-weight: 700; line-height: 1;
+  color: #fff; background: linear-gradient(135deg, var(--orange) 0%, var(--orange-2) 100%);
+  box-shadow: 0 4px 14px rgba(254,114,2,.32);
 }
-.me-podcast .mp-qr {
-  width: 124px; height: 124px; display: block; border-radius: 8px;
-  padding: 6px; background: #fff; border: 1px solid var(--panel-line);
+.me-podcast .mp-link-label {
+  font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase;
+  padding-right: 10px; border-right: 1px solid rgba(255,255,255,.42);
+  color: rgba(255,255,255,.92);
 }
+.me-podcast .mp-link-url { font-size: 15.5px; }
+.me-podcast .mp-link-arrow { font-size: 15px; color: rgba(255,255,255,.9); }
 
 /* ---- tick / cross lists ---- */
 .ticks { list-style: none; margin: 0; padding: 0; }
