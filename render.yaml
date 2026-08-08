@@ -16,13 +16,21 @@ services:
     # port, which opens before the app is actually serving requests.
     healthCheckPath: /_stcore/health
     envVars:
+      # Pin the interpreter: pyproject requires >=3.11,<3.13, but Render's default
+      # is now 3.14. uv would download a compatible Python anyway — this just
+      # removes the extra download as a build-time failure mode.
+      - key: PYTHON_VERSION
+        value: "3.12.8"
       - key: OPENAI_API_KEY
         sync: false          # set in the Render dashboard (never commit secrets)
       - key: SELTZ_API_KEY
         sync: false
       # --- optional: LangSmith tracing/monitoring ---
+      # Off by default: with tracing on but no LANGSMITH_API_KEY set, every agent
+      # step attempts a trace export and logs an auth failure. Flip to "true"
+      # only once you've added the key below in the dashboard.
       - key: LANGSMITH_TRACING
-        value: "true"
+        value: "false"
       - key: LANGSMITH_PROJECT
         value: knowledge-assistant
       - key: LANGSMITH_API_KEY
